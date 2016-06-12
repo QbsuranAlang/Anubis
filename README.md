@@ -125,7 +125,7 @@ Anubis is a powerful packet generator. Support any layer socket from TCP/IP laye
 * ```""Option""```(object, required)：整個socket的參數。
 * ```"Sequence"```(array, required)：個別封包。
 
-##Data-link and Network socket supported protocol
+##Supported protocol
 * ```"Ethernet"```
 * ```"ARP"```
 * ```"RARP"```

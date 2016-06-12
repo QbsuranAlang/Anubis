@@ -1,0 +1,108 @@
+[
+    {
+        "_comment": "Send a DHCP discover message",
+        "Socket-type": "Data-link",
+        "Option": {
+            "Device": "en0" /*Send to "en0"*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "Broadcast",
+                            "Type": "ETHERTYPE_IP"
+                        }
+                    },
+                    {
+                        "IP": {
+                            "Total Length": "auto", /*Because DHCP has minimum size issue*/
+                            "Identification": "0x12345678",
+                            "Protocol": "IPPROTO_UDP",  /*Next protocol is UDP*/
+                            "Source IP Address": "0.0.0.0",
+                            "Destination IP Address": "Broadcast"
+                        }
+                    },
+                    {
+                        "UDP": {
+                            "Source Port": "port(DHCP-client)",
+                            "Destination Port": "port(DHCP-server)",
+                            "Length": "auto" /*Because DHCP has minimum size issue*/
+                        }
+                    },
+                    {
+                        "DHCP": {
+                            "Operation Code": "DHCP_REQUEST",
+                            "Hardware Address Type": "0x1",     /*Ethernet*/
+                            "Hardware Address Length": "6",
+                            "Hops": 0,
+                            "Transaction ID": "0x87654321",
+                            "Seconds": 0,
+                            "Broadcast Flags": "disable", /*Disable broadcast flags*/
+                            "Client IP Address": "0.0.0.0",
+                            "Your IP Address": "0.0.0.0",
+                            "Server IP Address": "0.0.0.0",
+                            "Gateway IP Address" : "0.0.0.0",
+                            "Client MAC Address": "myself",
+                            "Server Hostname": "DHCP server hostname",
+                            "Boot File Name": "Boot filename"
+                        }
+                    },
+                    {
+                        "DHCP Options": [
+                            {
+                                "Type": "DHCP_MESSAGETYPE",
+                                "Length": 1,
+                                "Message": "DHCP_MSGDISCOVER"
+                            },
+                            {
+                                "Type": "DHCP_CLIENTID",
+                                "Length": 7,
+                                "Hardware Address Type": "0x1",
+                                "Client Hardware Address": "myself"
+                            },
+                            {
+                                "Type": "DHCP_REQUESTED_IP_ADDRESS",
+                                "Length": 4,
+                                "Requested IP Address": "0.0.0.0"
+                            },
+                            {
+                                "Type": "DHCP_PARAMREQUEST",
+                                "Length": 4,
+                                "List": ["DHCP_SUBNETMASK", "DHCP_ROUTER", "DHCP_DNS_SERVER", "DHCP_NTP_SERVER"]
+                            },
+                            {
+                                "Type": "DHCP_PAD"
+                            },
+                            {
+                                "Type": "DHCP_END"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_comment": "Receive a DHCP server offer message",
+        "Socket-type": "Application",
+        "Option": {
+            "Type": "SOCK_DGRAM",
+            "Role": "Server", /*Because we need wait first*/
+            "Device": "en0", /*Bind to "en0"*/
+            "Source Port": "port(DHCP-client)" /*Bind to port 68*/
+        },
+        "Sequence": [
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Receive Packet": "enable",
+                            "Receive timeout": 1000
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

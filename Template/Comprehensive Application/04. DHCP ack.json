@@ -1,0 +1,100 @@
+[
+    {
+        "_comment": "Send a DHCP offer message",
+        "Socket-type": "Network",
+        "Option": {
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "IP": {
+                            "Total Length": "auto", /*Because DHCP has minimum size issue*/
+                            "Identification": "0x12345678",
+                            "Protocol": "IPPROTO_UDP",  /*Next protocol is UDP*/
+                            "Source IP Address": "1.1.1.1",
+                            "Destination IP Address": "192.168.1.1"
+                        }
+                    },
+                    {
+                        "UDP": {
+                            "Source Port": "port(DHCP-server)",
+                            "Destination Port": "port(DHCP-client)",
+                            "Length": "auto" /*Because DHCP has minimum size issue*/
+                        }
+                    },
+                    {
+                        "DHCP": {
+                            "Operation Code": "DHCP_REPLY",
+                            "Hardware Address Type": "0x1",     /*Ethernet*/
+                            "Hardware Address Length": "6",
+                            "Hops": 1,
+                            "Transaction ID": "0x87654321",
+                            "Seconds": 0,
+                            "Broadcast Flags": "disable", /*Disable broadcast flags*/
+                            "Client IP Address": "0.0.0.0",
+                            "Your IP Address": "192.168.1.1",
+                            "Server IP Address": "0.0.0.0",
+                            "Gateway IP Address" : "0.0.0.0",
+                            "Client MAC Address": "myself",
+                            "Server Hostname": "DHCP server hostname",
+                            "Boot File Name": "Boot filename"
+                        }
+                    },
+                    {
+                        "DHCP Options": [
+                            {
+                                "Type": "DHCP_MESSAGETYPE",
+                                "Length": 1,
+                                "Message": "DHCP_MSGACK"
+                            },
+                            {
+                                "Type": "DHCP_SERVER",
+                                "Length": 4,
+                                "Server IP Address": "myself"
+                            },
+                            {
+                                "Type": "DHCP_LEASETIME",
+                                "Length": 4,
+                                "Time": 21600 /*6 hours*/
+                            },
+                            {
+                                "Type": "DHCP_SUBNETMASK",
+                                "Length": 4,
+                                "Netmask": "255.255.255.0"
+                            },
+                            {
+                                "Type": "DHCP_ROUTER",
+                                "Length": 4,
+                                "Router IP Address": "192.168.1.1"
+                            },
+                            {
+                                "Type": "DHCP_DNS_SERVER",
+                                "Length": 4,
+                                "DNS IP Address": "192.168.1.1"
+                            },
+                            {
+                                "Type": "DHCP_NTP_SERVER",
+                                "Length": 4,
+                                "NTP IP Address": "192.168.1.1"
+                            },
+                            {
+                                "Type": "DHCP_RENEWTIME",
+                                "Length": 4,
+                                "Time": 1800 /*3 min*/
+                            },
+                            {
+                                "Type": "DHCP_REBINDTIME",
+                                "Length": 4,
+                                "Time": 1800 /*3 min*/
+                            },
+                            {
+                                "Type": "DHCP_END"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

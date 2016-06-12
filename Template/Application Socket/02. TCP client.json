@@ -1,0 +1,35 @@
+[
+    {
+        "_comment": "TCP client, connect to localhost:12345",
+        "Socket-type": "Application",
+        "Option": {
+            "Type": "SOCK_STREAM",
+            "Destination IP Address": "myself",
+            "Destination Port": 12345,
+            "Role": "Client"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Payload": {
+                            "Payload": "Hello\r\n"
+                        }
+                    }
+                ]
+            },
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Receive timeout": 1000,
+                            "Dump Receive Packet": "enable",
+                            "Read until Timeout": "enable",
+                            "Output to file": "TCP_client_log.txt"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

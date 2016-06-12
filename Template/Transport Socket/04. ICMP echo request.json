@@ -1,0 +1,38 @@
+[
+    {
+        "_comment": "Send infinite ICMP echo request to 192.168.1.1",
+        "Socket-type": "Transport",
+        "Option": {
+            "Destination IP address": "192.168.1.1",
+            "Protocol": "IPPROTO_ICMP",
+            "Device": "en4" /*Send to "en4"*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "ICMP": {
+                            "Type": "ICMP_ECHO",
+                            "Code": 0,
+                            "Checksum": "auto",
+                            "Identifier": "random()",
+                            "Sequence number": "random()"
+                        }
+                    },
+                    {
+                        "Payload": {
+                            "Payload": "1234567890"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Infinite loop": "enable",  /*Enable infinite loop*/
+                            "Interval": 1000000, /*Interval: 1s*/
+                            "Amount": 5
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

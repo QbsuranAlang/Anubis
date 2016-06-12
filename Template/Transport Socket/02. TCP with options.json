@@ -1,0 +1,60 @@
+[
+    {
+        "_comment": "Send a TCP(SYN) segment with options",
+        "Socket-type": "Transport",
+        "Option": {
+            "Destination IP address": "www.google.com",
+            "Protocol": "IPPROTO_TCP"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "TCP": {
+                            "Source Port": "random(dynamic)",
+                            "Destination Port": "80",
+                            "Sequence number": "0",
+                            "Acknowledgment number": "0",
+                            "Flags": "TH_SYN",
+                            "Window": "1024",
+                            "Checksum": "auto",
+                            "Urgent Pointer": "0"
+                        }
+                    },
+                    {
+                        "TCP Options": [
+                            {
+                                "Type": "TCPOPT_MAXSEG", /*Maxmimum segment size*/
+                                "Length": 4,
+                                "MSS Value": 1460
+                            },
+                            {
+                                "Type": "TCPOPT_SACK_PERMITTED", /*SYN+ACK permitted*/
+                                "Length": 2
+                            },
+                            {
+                                "Type": "TCPOPT_WINDOW", /*Window*/
+                                "Length": 3,
+                                "Shift count": 7
+                            },
+                            {
+                                "Type": "TCPOPT_NOP" /*No opeation*/
+                            },
+
+                            {
+                                "Type": "TCPOPT_EOL" /*End of line*/
+                            }
+                        ]
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 200000,
+                            "Amount": 1,
+                            "Dump send packet": "disable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

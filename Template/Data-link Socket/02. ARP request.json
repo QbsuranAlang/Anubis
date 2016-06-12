@@ -1,0 +1,42 @@
+[
+    {
+        "_comment": "Send 4 ARP frames",
+        "Socket-type": "Data-link",
+        "Option": {
+            "Device": "en0",
+            "Interval": 3000000,         /*Interval: 3s*/
+            "Amount": 3                 /*Send 3 frames*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "Broadcast",
+                            "Source MAC Address": "myself",
+                            "Type": "0x0800 | 0x0006"
+                        }
+                    },
+                    {
+                        "ARP": {
+                            "Hardware Type": 1,
+                            "Protocol Type": "0x0800",
+                            "Hardware Address Length": 6,
+                            "Protocol Address Length": 4,
+                            "Operation": "ARPOP_REQUEST",   /*Operation is request*/
+                            "Sender Hardware Address": "myself",
+                            "Sender Protocol Address": "myself",
+                            "Target Hardware Address": "0:0:0:0:0:0:0", /*Because it is request*/
+                            "Target Protocol Address": "192.168.1.1"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Dump send packet": "enable"    /*Dump sent frame*/
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

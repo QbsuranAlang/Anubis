@@ -1,0 +1,56 @@
+[
+    {
+        "_comment": "TCP server, bind to localhost:12345",
+        "Socket-type": "Application",
+        "Option": {
+            "Infinite loop": "enable", /*Because it is server*/
+            "Type": "SOCK_STREAM",
+            "Role": "Server",
+            "Source Port": 12345,
+            "Asynchronous": "disable", /*"Enable" more like usual TCP server*/
+            "Max Connection": 1024
+        },
+        "Sequence": [
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Receive Packet": "enable",
+                            "Receive timeout": 1000
+                        }
+                    }
+                ]
+            },
+            {
+                "Send Packet": [
+                    /*HTTP response*/
+                    {
+                        "HTTP": {
+                            "Response": {
+                                "Version": "HTTP/1.1",
+                                "Status Code": 200,
+                                "Phrase": "OK"
+                            },
+                            "Field": {
+                                "Keys": ["content-language", "content-type"],
+                                "Values": ["\"zh-TW\"", "text/html; charset=UTF-8"]
+                            }
+                        }
+                    },
+                    /*A simple HTML*/
+                    {
+                        "Payload": {
+                            "Payload": "<h1>Hello Anubis</h1>"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Dump send Packet": "enable",
+                            "Send timeout": 1000
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

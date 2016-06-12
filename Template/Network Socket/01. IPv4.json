@@ -1,0 +1,42 @@
+[
+    {
+        "_comment": "Send 3 raw IP datagram",
+        "Socket-type": "Network",
+        "Option": {
+            "Device": "en4" /*Send to "en4"*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "IP": {
+                            "Type of Service": "10000001",
+                            "Total Length": 30, /*It is on purpose. According to "payload length" it should be 40*/
+                            "Identification": "random()",
+                            "Flags": "IP_DF | IP_RF",   /*Set don't fragment and reserve*/
+                            "Fragment Offset": 0,
+                            "Time to Live": 120,
+                            "Protocol": "IPPROTO_UDP",  /*Next protocol is UDP*/
+                            "Header Checksum": "auto",  /*Auto calculate*/
+                            "Source IP Address": "myself",
+                            "Destination IP Address": "120.125.86.7"
+                        }
+                    },
+                    {
+                        "Payload": {
+                            "Payload": "1234567890",
+                            "Payload length": 20 /*It is on purpose*/
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 200000,
+                            "Amount": 3,
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

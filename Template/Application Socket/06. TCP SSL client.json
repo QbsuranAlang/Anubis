@@ -1,0 +1,42 @@
+[
+    {
+        "_comment": "TCP SSL client, connect to localhost:54321",
+        "Socket-type": "Application",
+        "Option": {
+            "Type": "SOCK_STREAM",
+            "Role": "Client",
+            "Device": "en0",
+            "Destination IP Address": "myself",
+            "Destination Port": 54321,
+            "Security": "enable", /*Enable security socket*/
+            "Method": "SSLv23", /*Use SSLv2 or SSLv3*/
+            "Certificate": "public.pem",
+            "Private Key": "private.pem",
+            "Certificate Information": "enable"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Send Packet": "enable",
+                            "Input from file": "input_file.txt" /*Read sent data from file*/
+                        }
+                    }
+                ]
+            },
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Receive timeout": 1000,
+                            "Dump Receive Packet": "enable",
+                            "Read until Timeout": "enable",
+                            "Output to file": "TCP_SSL_client_log.txt"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

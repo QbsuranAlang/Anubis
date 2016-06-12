@@ -1,0 +1,37 @@
+[
+    {
+        "_comment": "UDP server, bind to localhost:12345",
+        "Socket-type": "Application",
+        "Option": {
+            "Infinite loop": "enable", /*Because it is server*/
+            "Type": "SOCK_DGRAM",
+            "Role": "Server", /*I am server*/
+            "Device": "en0", /*Bind to "en0"*/
+            "Source Port": 12345 /*Bind to port 12345*/
+        },
+        "Sequence": [
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Receive Packet": "enable",
+                            "Amount": 3
+                        }
+                    }
+                ]
+            },
+            {
+                "Send Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump send Packet": "enable",
+                            "Interactive": "enable",
+                            "Amount": 3,
+                            "Send timeout": 1000
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,36 @@
+[
+    {
+        "_comment": "Send 3 TCP segment",
+        "Socket-type": "Transport",
+        "Option": {
+            "Device": "en0",
+            "Destination IP Address": "www.google.com", /*Target hostname*/
+            "Protocol": "IPPROTO_TCP"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "TCP": {
+                            "Source Port": "random(dynamic)",   /*Random a dynamic range port*/
+                            "Destination Port": "80",           /*HTTP*/
+                            "Sequence number": "0x12345678",
+                            "Acknowledgment number": "0x87654321",
+                            "Flags": "TH_SYN | TH_FIN | TH_PUSH",
+                            "Window": "0xabcd",
+                            "Checksum": "auto", /*Auto calculate*/
+                            "Urgent Pointer": "0"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 200000,
+                            "Amount": 3,
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

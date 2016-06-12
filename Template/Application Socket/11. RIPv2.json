@@ -1,0 +1,77 @@
+[
+    {
+        "_comment": "Send 3 pair of RIPv2 request and response",
+        "Socket-type": "Application",
+        "Option": {
+            "Destination IP Address": "multicast_address(RIPv2)", /*Destination is a muliticast address*/
+            "Destination Port": "port(RIP)",
+            "Type": "SOCK_DGRAM",
+            "Role": "Client",
+            "Amount": 3,
+            "Interval": 1000000, /*Interval: 1s*/
+            "Source Port": "port(RIP)" /*Source port and destination port of RIP are the same(520)*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "RIP": {
+                            "Command": "RIPCMD_REQUEST", /*Operation is request*/
+                            "Version": "2",
+                            "Routing Domain": "1",
+                            "Route Table Entry": [
+                                {
+                                    "Address Family": "AF_INET",
+                                    "Route Tag": "2",
+                                    "IP Address": "192.168.1.1",
+                                    "Netmask": "255.255.255.0",
+                                    "Next hop": "0.0.0.0",
+                                    "Metric": 2
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 100000
+                        }
+                    }
+                ]
+            },
+            {
+                "Send Packet": [
+                    {
+                        "RIP": {
+                            "Command": "RIPCMD_RESPONSE", /*Operation is response*/
+                            "Version": "2",
+                            "Routing Domain": "1",
+                            "Route Table Entry": [
+                                {
+                                    "Address Family": "AF_INET",
+                                    "Route Tag": "0",
+                                    "IP Address": "192.168.1.1",
+                                    "Netmask": "255.255.255.0",
+                                    "Next hop": "0.0.0.0",
+                                    "Metric": 2
+                                },
+                                {
+                                    "Address Family": "AF_INET",
+                                    "Route Tag": "0",
+                                    "IP Address": "192.168.1.1",
+                                    "Netmask": "255.255.255.0",
+                                    "Next hop": "0.0.0.0",
+                                    "Metric": 2
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 100000
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

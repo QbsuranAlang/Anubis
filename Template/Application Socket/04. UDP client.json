@@ -1,0 +1,35 @@
+[
+    {
+        "_comment": "UDP client, send to localhost:12345",
+        "Socket-type": "Application",
+        "Option": {
+            "Destination IP Address": "myself", /*My current IP address(en0)*/
+            "Destination Port": 12345,
+            "Type": "SOCK_DGRAM",
+            "Role": "Client" /*I am client*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump send Packet": "enable",
+                            "Interactive": "enable",    /*Get input data on run-time*/
+                            "Amount": 3
+                        }
+                    }
+                ]
+            },
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Receive Packet": "enable",
+                            "Amount": 3
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,34 @@
+[
+    {
+        "_comment": "Send 4 raw Ethernet frames",
+        "Socket-type": "Data-link", /*Socket type is "Data-link"*/
+        "Option": {
+            "Device": "en0" /*Send to "en0"*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "random_mac_address()",  /*Destination is random*/
+                            "Source MAC Address": "myself",
+                            "Type": "ETHERTYPE_ARP"
+                        }
+                    },
+                    {
+                        "Raw Data": {
+                            "Data": "This is data",
+                            "Data Length": 12
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 1000000,    /*Interval: 1s*/
+                            "Amount": 4            /*Send 4 frames*/
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

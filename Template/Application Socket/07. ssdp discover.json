@@ -1,0 +1,53 @@
+[
+    {
+        "_comment": "Send a SSDP discover datagram to the LAN and wait response",
+        "Socket-type": "Application",
+        "Option": {
+            "Destination IP Address": "multicast_address(SSDP)", /*Destination is a muliticast address*/
+            "Destination Port": "port(SSDP)", /*SSDP port*/
+            "Type": "SOCK_DGRAM", /*Use datagram, default is UDP*/
+            /*Add the socket to muliticast group, so that can receive muliticast message*/
+            "Muliticast Group": ["multicast_address(SSDP)"], 
+            //"Device": "en0", /*If use "Muliticast Group", do not use "Device"*/
+            "Role": "Client" /*I am client*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    /*SSDP discover message*/
+                    {
+                        "SSDP": {
+                            "Request": {
+                                "Method": "M-SEARCH",
+                                "URL": "*",
+                                "Version": "HTTP/1.1"
+                            },
+                            "Field": {
+                                "Keys": ["HOST", "MAN", "MX", "ST"],
+                                "Values": ["239.255.255.250:1900", "\"ssdp:discover\"", "2", "ssdp:all"]
+                            }
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            },
+            /*After sending, wait response*/
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Receive packet": "enable", /*Dump received message*/
+                            /*Keep reading, until timeout. Because we do not known how many response, use "Amount" is not appropriate*/
+                            "Read until Timeout": "enable",
+                            "Receive timeout": 1000 /*Because of "Read until Timeout"*/
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

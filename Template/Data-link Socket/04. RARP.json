@@ -1,0 +1,35 @@
+[
+    {
+        "_comment": "Send a RARP frame request",
+        "Socket-type": "Data-link",
+        "Option": {
+            "Device": "en0"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "Broadcast",
+                            "Type": "ETHERTYPE_REVARP"
+                        }
+                    },
+                    {
+                        "ARP": {
+                            "Operation": "ARPOP_REVREQUEST",  /*Operation is reverse request*/
+                            "Sender Hardware Address": "myself",
+                            "Sender Protocol Address": "myself",
+                            "Target Hardware Address": "lookup_mac_address(192.168.1.1)",
+                            "Target Protocol Address": "0.0.0.0" /*Because it is request*/
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,128 @@
+[
+    {
+        "_comment": "Send 2 Wake-On-LAN frame to aa:bb:cc:dd:ee:ff",
+        "Socket-type": "Data-link",
+        "Option": {
+            "Device": "en0"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "Broadcast",
+                            "Source MAC Address": "myself",
+                            "Type": "ETHERTYPE_WOL"
+                        }
+                    },
+                    {
+                        "Wake-On-LAN": {
+                            "Sync Stream": "ff:ff:ff:ff:ff:ff",
+                            "MAC Address": "aa:bb:cc:dd:ee:ff"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 100000,
+                            "Amount": 2,
+                            "Dump Send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_comment": "Send 2 Wake-On-LAN datagram to aa:bb:cc:dd:ee:ff",
+        "Socket-type": "Application",
+        "Option": {
+            "Destination IP address": "Broadcast",
+            "Destination Port": "port(Wake-On-LAN)",
+            "Type": "SOCK_DGRAM",
+            "Role": "Client"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Wake-On-LAN": {
+                            "Sync Stream": "ff:ff:ff:ff:ff:ff",
+                            "MAC Address": "aa:bb:cc:dd:ee:ff",
+                            "Password": "1:2:3:4:5:6"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 100000,
+                            "Amount": 2,
+                            "Dump Send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_comment": "Send 2 Wake-On-LAN frame to 192.168.1.1",
+        "Socket-type": "Data-link",
+        "Option": {
+            "Device": "en0"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Ethernet": {
+                            "Destination MAC Address": "lookup_mac_address(192.168.1.1)",
+                            "Source MAC Address": "myself",
+                            "Type": "ETHERTYPE_WOL"
+                        }
+                    },
+                    {
+                        "Wake-On-LAN": {
+                            "Sync Stream": "ff:ff:ff:ff:ff:ff",
+                            "MAC Address": "lookup_mac_address(192.168.1.1)"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 100000,
+                            "Amount": 2,
+                            "Dump Send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "_comment": "Send 2 Wake-On-LAN datagram to 192.168.1.1",
+        "Socket-type": "Application",
+        "Option": {
+            "Destination IP address": "192.168.1.1",
+            "Destination Port": "port(Wake-On-LAN)",
+            "Type": "SOCK_DGRAM",
+            "Role": "Client"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "Wake-On-LAN": {
+                            "Sync Stream": "ff:ff:ff:ff:ff:ff",
+                            "MAC Address": "lookup_mac_address(192.168.1.1)",
+                            "Password": "1:2:3:4:5:6"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 100000,
+                            "Amount": 2,
+                            "Dump Send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

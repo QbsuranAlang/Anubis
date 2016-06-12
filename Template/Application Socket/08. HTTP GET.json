@@ -1,0 +1,58 @@
+[
+    {
+        "_comment": "Send a HTTP GET to moodle.mcu.edu.tw",
+        "Socket-type": "Application",
+        "Option": {
+            "Amount": 1, /*A TCP socket is one connection. When server send data of request is done, socket will be closed by server*/
+            "Type": "SOCK_STREAM", /*Use stream, default is TCP*/
+            "Send Timeout": 1000, /*Timeout: 1s*/
+            "Receive Timeout": 3000, /*Timeout: 3s*/
+            "Role": "Client", /*I am client*/
+            "Device": "en0", /*Send throungh en0*/
+            "Destination IP Address": "moodle.mcu.edu.tw", /*Target hostname*/
+            "Destination Port": "port(HTTP)" /*Target port*/
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    /*HTTP GET message*/
+                    {
+                        "HTTP": {
+                            "Request": {
+                                "Method": "GET",
+                                "URL": "/",
+                                "Version": "HTTP/1.1"
+                            },
+                            "Field": {
+                                "Keys": ["HOST", "Connection", "Accept", "User-Agent"],
+                                "Values": ["moodle.mcu.edu.tw", "keep-alive", "*/*", "Anubis"]
+                            }
+                        }
+                    }
+                ]
+            },
+            /*After sending, wait response*/
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Receive Packet": "enable",
+                            "Read until Timeout": "enable", /*Alread set "Receive timeout"*/
+                            "Output to file": "http_get_log.txt" /*Output receive data to file*/
+                        }
+                    }
+                ]
+            },
+            /*When server send data of request is done, socket will be closed by server. So this will never be reach.*/
+            {
+                "Send Packet": [
+                    {
+                        "Packet Option": {
+                            "Interactive": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

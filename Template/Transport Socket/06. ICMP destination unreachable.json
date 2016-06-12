@@ -1,0 +1,58 @@
+[
+    {
+        "_comment": "Send 3 ICMP destination unreachable",
+        "Socket-type": "Transport",
+        "Option": {
+            "Destination IP address": "192.168.1.1",
+            "Protocol": "IPPROTO_ICMP"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "ICMP": {
+                            "Type": "ICMP_UNREACH",
+                            "Code": "ICMP_UNREACH_NEEDFRAG",
+                            "Checksum": "auto",
+                            "Next MTU": 123
+                        }
+                    },
+                    /*ICMP destination unreachable carry data*/
+                    {
+                        "IP": {
+                            "Type of Service": "10000001",
+                            "Total Length": 40, /*IP(20) + TCP(20) = 40*/
+                            "Identification": "random()",
+                            "Flags": "IP_DF",
+                            "Fragment Offset": 0,
+                            "Time to Live": 120,
+                            "Protocol": "IPPROTO_TCP",
+                            "Header Checksum": "auto",
+                            "Source IP Address": "myself",
+                            "Destination IP Address": "random_ip_address()"
+                        }
+                    },
+                    {
+                        "TCP": {
+                            "Source Port": "random(dynamic)",
+                            "Destination Port": "80",
+                            "Sequence number": "0x12345678",
+                            "Acknowledgment number": "0x87654321",
+                            "Flags": "TH_SYN | TH_FIN | TH_PUSH",
+                            "Window": "0xabcd",
+                            "Checksum": "auto",
+                            "Urgent Pointer": "0"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 200000,
+                            "Amount": 3,
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

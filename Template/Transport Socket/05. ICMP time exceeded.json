@@ -1,0 +1,53 @@
+[
+    {
+        "_comment": "Send 3 ICMP time exceeded",
+        "Socket-type": "Transport",
+        "Option": {
+            "Destination IP address": "192.168.1.1",
+            "Protocol": "IPPROTO_ICMP"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "ICMP": {
+                            "Type": "ICMP_TIMXCEED",
+                            "Code": 0,
+                            "Checksum": "auto"
+                        }
+                    },
+                    /*ICMP time exceeded carry data*/
+                    {
+                        "IP": {
+                            "Type of Service": "10000001",
+                            "Total Length": 28, /*IP(20) + UDP(8) = 28*/
+                            "Identification": "random()",
+                            "Flags": "IP_DF",
+                            "Fragment Offset": 0,
+                            "Time to Live": 120,
+                            "Protocol": "IPPROTO_UDP",
+                            "Header Checksum": "auto",
+                            "Source IP Address": "myself",
+                            "Destination IP Address": "192.168.1.1"
+                        }
+                    },
+                    {
+                        "UDP": {
+                            "Source Port": 123,
+                            "Destination Port": "0x12",
+                            "Length": "0x8",
+                            "Checksum": "auto"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 200000,
+                            "Amount": 3,
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

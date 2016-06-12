@@ -1,0 +1,1 @@
+\"\"T\\\\he te\xt is from file\\\r\n\\1234567890\"\

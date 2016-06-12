@@ -1,0 +1,35 @@
+//        _____   _   _   _____   _   _
+//       |_   _| | | | | |_   _| | | | |
+//         | |   | | | |   | |   | | | |
+//         | |   | |_| |   | |   | |_| |
+//         |_|    \___/    |_|    \___/
+//
+//
+//                       _
+//       /\             | |             (_)
+//      /  \     _ __   | |__    _   _   _   ___
+//     / /\ \   | '_ \  | '_ \  | | | | | | / __|
+//    / ____ \  | | | | | |_) | | |_| | | | \__ \
+//   /_/    \_\ |_| |_| |_.__/   \__,_| |_| |___/
+//
+//
+//         ／ﾌﾌ 　　　　　　 　ム｀ヽ
+//        / ノ)　　 ∧∧　　　　　）　ヽ
+//     　ﾞ/ ｜　　(´・ω・`）ノ⌒（ゝ._,ノ     人類，
+//       /　ﾉ⌒7⌒ヽーく　 ＼　／               你渴望力量嗎？
+//       丶＿ ノ ｡　　 ノ､　　｡|/
+//            `ヽ `ー-'_人`ーﾉ
+//              丶 ￣ _人'彡ﾉ
+//               ﾉ　　r'十ヽ/
+
+* UDP server is bind to "en0", "Destination IP Address" of UDP client is "myself"(default "en0"), so that the 2 processes are connectable to each other.
+* If UDP server is not use "Device", in that case, UDP server will bind to all network interface, "Destination IP Address" of UDP client can be "myself" or "127.0.0.1" are connectable.
+
+Steps between UDP server and UDP client
+Step1. Start UDP server(server bind to en0:12345)
+Step2. Start UDP client
+Step3. UDP client send 3 datagram to UDP server(default from stdin)
+Step4. UDP server will receive 3 datagram from UDP client
+Step5. UDP server received 3 datagram, then UDP server send back 3 datagram to UDP client
+Step6. UDP client received 3 datagram from UDP server
+Step7. UDP client done and finish, UDP server is keep waiting for next connection

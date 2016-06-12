@@ -1,0 +1,34 @@
+//        _____   _   _   _____   _   _
+//       |_   _| | | | | |_   _| | | | |
+//         | |   | | | |   | |   | | | |
+//         | |   | |_| |   | |   | |_| |
+//         |_|    \___/    |_|    \___/
+//
+//
+//                       _
+//       /\             | |             (_)
+//      /  \     _ __   | |__    _   _   _   ___
+//     / /\ \   | '_ \  | '_ \  | | | | | | / __|
+//    / ____ \  | | | | | |_) | | |_| | | | \__ \
+//   /_/    \_\ |_| |_| |_.__/   \__,_| |_| |___/
+//
+//
+//         ／ﾌﾌ 　　　　　　 　ム｀ヽ
+//        / ノ)　　 ∧∧　　　　　）　ヽ
+//     　ﾞ/ ｜　　(´・ω・`）ノ⌒（ゝ._,ノ     人類，
+//       /　ﾉ⌒7⌒ヽーく　 ＼　／               你渴望力量嗎？
+//       丶＿ ノ ｡　　 ノ､　　｡|/
+//            `ヽ `ー-'_人`ーﾉ
+//              丶 ￣ _人'彡ﾉ
+//               ﾉ　　r'十ヽ/
+
+* TCP server is bind to all network interface, (*:12345)
+
+Steps between TCP server and TCP client
+Step1. Start TCP server
+[Try use any browser(like chrome) to browse http://127.0.0.1:12345, browser will get a simple website]
+Step2. Start TCP client
+Step3. TCP client send a string: "Hello\r\n" to TCP server
+Step4. TCP server received the message, then TCP server send back a simple html to TCP client
+Step5. TCP client received a simple html from TCP server
+Step6. TCP client done and close connection, TCP server is keep waiting for next connection

@@ -1,0 +1,40 @@
+[
+    {
+        "_comment": "Send a ICMP echo request datagram to www.google.com with 10 bytes payload",
+        "Socket-type": "Network",
+        "Option": {
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "IP": {
+                            "Total Length": 38, /*IP(20) + ICMP echo(8) + Payload(10) = 38*/
+                            "Protocol": "IPPROTO_ICMP",
+                            "Destination IP Address": "www.google.com" /*Target hostname*/
+                        }
+                    },
+                    {
+                        "ICMP": {
+                            "Type": "ICMP_ECHO",
+                            "Code": 0,
+                            "Checksum": "auto", /*Auto calculate*/
+                            "Identifier": "random()",
+                            "Sequence number": "random()"
+                        }
+                    },
+                    {
+                        "Payload": {
+                            "Payload": "1234567890"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

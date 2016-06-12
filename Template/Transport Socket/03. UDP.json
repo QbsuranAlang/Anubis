@@ -1,0 +1,36 @@
+[
+    {
+        "_comment": "Send 3 UDP datagram",
+        "Socket-type": "Transport",
+        "Option": {
+            "Destination IP address": "www.google.com",
+            "Protocol": "IPPROTO_UDP"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "UDP": {
+                            "Source Port": 1234,
+                            "Destination Port": "0x12",
+                            "Length": 18, /*UDP(8) + Payload(10) = 18*/
+                            "Checksum": "auto"
+                        }
+                    },
+                    {
+                        "Payload": {
+                            "Payload": "1234567890"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Interval": 200000,
+                            "Amount": 3,
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

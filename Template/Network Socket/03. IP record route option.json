@@ -1,0 +1,58 @@
+[
+    {
+        "_comment": "Send a ICMP echo request datagram with record route option to www.google.com",
+        "Socket-type": "Network",
+        "Option": {
+            "Device": "en0"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "IP": {
+                            "Total Length": 78, /*IP(20) + IP option(40) + ICMP echo(8) + Payload(10) = 38*/
+                            "Protocol": "IPPROTO_ICMP",
+                            "Destination IP Address": "www.google.com"
+                        }
+                    },
+                    {
+                        "IP Options": [
+                            {
+                                "Type": "IPOPT_RR", /*Record route option*/
+                                "Length": 39,
+                                "Pointer": 4,
+                                /*Default are 0.0.0.0*/
+                                "Route1": "0.0.0.0",
+                                "Route2": "0.0.0.0",
+                                "Route3": "0.0.0.0",
+                                "Route4": "0.0.0.0",
+                                "Route5": "0.0.0.0",
+                                "Route6": "0.0.0.0",
+                                "Route7": "0.0.0.0",
+                                "Route8": "0.0.0.0",
+                                "Route9": "0.0.0.0"
+                            },
+                            {
+                                "Type": "IPOPT_EOL" /*End of line*/
+                            }
+                        ]
+                    },
+                    {
+                        "ICMP": {
+                            "Type": "ICMP_ECHO",
+                            "Code": 0,
+                            "Checksum": "auto", /*Auto calculate*/
+                            "Identifier": "random()",
+                            "Sequence number": "random()"
+                        }
+                    },
+                    {
+                        "Payload": {
+                            "Payload": "1234567890"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

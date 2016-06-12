@@ -1,0 +1,61 @@
+[
+    {
+        "_comment": "TCP SSL server, bind to localhost:54321",
+        "Socket-type": "Application",
+        "Option": {
+            "Infinite loop": "enable", //because it is server
+            "Type": "SOCK_STREAM",
+            "Send Timeout": 1000,
+            "Role": "Server",
+            "Source Port": 54321,
+            "Asynchronous": "disable",
+            "Max Connection": 1024,
+            "Security": "enable", /*Enable security socket*/
+            "Method": "SSLv23", /*Use SSLv2 or SSLv3*/
+            "Certificate": "public.pem",
+            "Private Key": "private.pem"
+        },
+        "Sequence": [
+            {
+                "Receive Packet": [
+                    {
+                        "Packet Option": {
+                            "Dump Receive Packet": "enable",
+                            "Receive timeout": 1000
+                        }
+                    }
+                ]
+            },
+            {
+                "Send Packet": [
+                    /*HTTP response*/
+                    {
+                        "HTTP": {
+                            "Response": {
+                                "Version": "HTTP/1.1",
+                                "Status Code": 200,
+                                "Phrase": "OK"
+                            },
+                            "Field": {
+                                "Keys": ["content-language", "content-type"],
+                                "Values": ["\"zh-TW\"", "text/html; charset=UTF-8"]
+                            }
+                        }
+                    },
+                    /*A simple HTML*/
+                    {
+                        "Payload": {
+                            "Payload": "<h1>Hello Anubis(Over SSL)</h1>"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Dump send Packet": "enable",
+                            "Send timeout": 1000
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

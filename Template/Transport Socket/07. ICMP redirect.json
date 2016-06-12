@@ -1,0 +1,53 @@
+[
+    {
+        "_comment": "Send an ICMP redirect",
+        "Socket-type": "Transport",
+        "Option": {
+            "Destination IP address": "192.168.1.1",
+            "Protocol": "IPPROTO_ICMP"
+        },
+        "Sequence": [
+            {
+                "Send Packet": [
+                    {
+                        "ICMP": {
+                            "Type": "ICMP_REDIRECT",
+                            "Code": "ICMP_REDIRECT_HOST",
+                            "Checksum": "auto",
+                            "Gateway": "192.168.1.1"
+                        }
+                    },
+                    /*ICMP redirect carry data.
+                      ICMP redirect only carry IP(20) + first 8 bytes of IP payload*/
+                    {
+                        "IP": {
+                            "Type of Service": "00000000",
+                            "Total Length": 40, /*IP(20) + TCP(20) = 40*/
+                            "Identification": "random()",
+                            "Fragment Offset": 0,
+                            "Time to Live": 64,
+                            "Protocol": "IPPROTO_ICMP",
+                            "Header Checksum": "auto",
+                            "Source IP Address": "myself",
+                            "Destination IP Address": "192.168.1.1"
+                        }
+                    },
+                    {
+                        "ICMP": {
+                            "Type": "ICMP_ECHO",
+                            "Code": 0,
+                            "Checksum": "auto",
+                            "Identifier": "random()",
+                            "Sequence number": "random()"
+                        }
+                    },
+                    {
+                        "Packet Option": {
+                            "Dump send packet": "enable"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

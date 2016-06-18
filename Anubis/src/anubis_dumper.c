@@ -87,8 +87,7 @@ static void anubis_dump_payload(u_int32_t dump_length, u_int32_t total_length, c
     fprintf(out_stream, "%-25s%8d byte%s", "| Payload length: ",
             dump_length, dump_length > 0 ? "s|\n" : " |\n");
     fprintf(out_stream, "+--------------------------------------+\n");
-    
-    fprintf(out_stream, "Payload(Raw):\n%*s", total_length, content);
+    fprintf(out_stream, "Payload(Raw):\n%*s", dump_length, content);
 }//end anubis_dump_payload
 
 static void anubis_dump_icmp(u_int32_t *dump_length, u_int32_t total_length, anubis_icmp_t *icmp) {
@@ -482,12 +481,15 @@ void anubis_dump_libnet_content(libnet_t *handle, int transport_layer, int is_ap
         anubis_dump_payload(len - dump_len, len, content + dump_len);
     fprintf(out_stream, "[EOP]\n\n");
     
+#ifndef __CYGWIN__
     //free
     if (handle->aligner > 0) {
         content = content - handle->aligner;
     }//end if
     free(content);
+#endif
     
+    fflush(out_stream);
 }//end anubis_dump_libnet_content
 
 void anubis_dump_application(const char *content, u_int32_t length) {
@@ -496,6 +498,8 @@ void anubis_dump_application(const char *content, u_int32_t length) {
         return;
     anubis_dump_payload(length, length, (const u_int8_t *)content);
     fprintf(out_stream, "[EOP]\n\n");
+    
+    fflush(out_stream);
 }//end anubis_dump_application
 
 void anubis_dump_server_certificate(SSL *ssl) {
@@ -692,4 +696,5 @@ void anubis_dump_server_certificate(SSL *ssl) {
     
     BIO_free(bio);
     X509_free(x509Cert);
+    fflush(out_stream);
 }//end anubis_dump_server_certificate

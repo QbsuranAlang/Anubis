@@ -61,13 +61,12 @@ struct {
 };
 
 u_int8_t *anubis_mac_aton(const char *mac_address) {
-    
     static u_int8_t buffer[ANUBIS_BUFFER_SIZE][ETHER_ADDR_LEN];
     static int which = -1;
     u_int8_t *temp = NULL;
     int len;
     which = (which + 1 == ANUBIS_BUFFER_SIZE ? 0 : which + 1);
-    
+
     memset(buffer[which], 0, sizeof(buffer[which]));
     
     temp = libnet_hex_aton(mac_address, &len);
@@ -78,13 +77,17 @@ u_int8_t *anubis_mac_aton(const char *mac_address) {
     
     //length is not 6
     if(len != ETHER_ADDR_LEN) {
-        free(temp);
         anubis_err("libnet_hex_aton(): invalid mac address: \"%s\"\n", mac_address);
+#ifndef __CYGWIN__
+	    free(temp);
+#endif
         return NULL;
     }//end if
     
     memmove(buffer[which], temp, sizeof(buffer[which]));
+#ifndef __CYGWIN__
     free(temp);
+#endif
     
     return buffer[which];
 }//end mac_aton
@@ -550,11 +553,7 @@ u_int8_t *anubis_lookup_mac_address(char *expression, const char *device) {
                     //temp file exsit and delete it
                     struct stat filestatus = {0};
                     if (stat(tmp_filename, &filestatus) == 0) {
-#ifndef WIN32
-                        unlink(tmp_filename);
-#else
 						remove(tmp_filename);
-#endif
                     }//end if
                     
                     fp = fopen(tmp_filename, "wt+");
@@ -574,18 +573,19 @@ u_int8_t *anubis_lookup_mac_address(char *expression, const char *device) {
                     for(int i = 0 ; i < 3 ; i++)
                         system(commands);
                     
-#ifndef WIN32
-					unlink(tmp_filename);
-#else
 					remove(tmp_filename);
-#endif
                     anubis_wait_microsecond(800000); //wait 800 ms
                 }//end if
                 else if(pid < 0) {
                     anubis_perror("fork()");
                 }//end if
                 
-                wait(NULL); //wait fork finish
+#ifdef __CYGWIN__
+	            wait(0);
+#else
+	            wait(NULL);
+#endif //wait fork finish
+	            
                 arping = 1;
                 goto AGAIN;
             }

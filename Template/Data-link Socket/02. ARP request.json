@@ -26,7 +26,7 @@
                             "Operation": "ARPOP_REQUEST",   /*Operation is request*/
                             "Sender Hardware Address": "myself",
                             "Sender Protocol Address": "myself",
-                            "Target Hardware Address": "0:0:0:0:0:0:0", /*Because it is request*/
+                            "Target Hardware Address": "0:0:0:0:0:0", /*Because it is request*/
                             "Target Protocol Address": "192.168.1.1"
                         }
                     },

@@ -24,16 +24,15 @@
 #ifndef anubis_structure_h
 #define anubis_structure_h
 
-#ifndef WIN32
+#ifndef __CYGWIN__
 #include <net/if_arp.h>
 #include <netinet/if_ether.h>
+#endif
 #include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <netinet/tcp.h>
 //#include <netinet/ip_icmp.h>
-#else
 
-#endif
 
 typedef enum {
     anubis_data_link_socket = 1,

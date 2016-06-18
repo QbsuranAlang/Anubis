@@ -1,4 +1,4 @@
-#Anubis v1.0
+#Anubis v1.1.2
 
 Anubis為萬能封包產生器，支援所有層開始的Socket，與一般封包產生器不同的是大多參數可以利用保留字代替，所有封包組態檔以JSON格式讀入。
 
@@ -6,7 +6,7 @@ Anubis is a powerful packet generator. Support any layer socket from TCP/IP laye
 
 <img src="Anubis.png" width = "300" height = "300">
 
-> 只有在OS X和CentOS上測試。
+> 只有在OS X和CentOS上測試，Windows版本請見[這裡](Win32/)。
 
 ##Library Dependency
 * [json-parser-1.1.0](https://github.com/udp/json-parser)
@@ -14,6 +14,9 @@ Anubis is a powerful packet generator. Support any layer socket from TCP/IP laye
 * [libnet-1.2-rc3](https://sourceforge.net/projects/libnet-dev/)
 * [libdnet-1.12](https://github.com/dugsong/libdnet/)
 * [openssl-1.0.2h](https://www.openssl.org/)
+
+## Support
+* [Image Source](https://www.iconfinder.com/iconsets/windows-8-metro-style).
 
 ##Parameter
 * ```{}```：表示是一組的參數，只有該組內的參數能夠同時出現。
@@ -47,7 +50,7 @@ Anubis is a powerful packet generator. Support any layer socket from TCP/IP laye
 * ```-h```、```--help```：顯示參數使用方式。
 
 ##Configuration principle
-1. 在```"Template"```目錄下有範例。
+1. 在**[Template](Template/)**目錄下有範例。
 2. 所有保留字的欄位都是**不區分大小寫(case insensitive)**，所有的整數都是使用**無號(unsigned)**解析。
 3. 在JSON組態檔中，可以使用C style註解```/**/```或C++ style註解```//```。
 4. 封包欄位要由下往上封裝，所以```"Sequence"```中的```"Send Packet"```必須是陣列。
@@ -1025,6 +1028,4 @@ Anubis is a powerful packet generator. Support any layer socket from TCP/IP laye
     ]
 }
 ```
-
-
 

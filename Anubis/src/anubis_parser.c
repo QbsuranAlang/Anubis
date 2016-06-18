@@ -85,9 +85,14 @@ void anubis_parse_mac_address(char *prefix, json_char *name, json_value *value,
     u_int8_t *ptr = NULL;
     if(!strcasecmp(value->u.string.ptr, "Myself")) {
         libnet_t *handle = NULL;
-        char errbuf[LIBNET_ERRBUF_SIZE];
-        
-        handle = libnet_init(LIBNET_RAW4, device, errbuf);
+	    char errbuf[LIBNET_ERRBUF_SIZE] = {0};
+#ifdef __CYGWIN__
+	    char device2[ANUBIS_BUFFER_SIZE] = {0};
+	    snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", device);
+	    handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
+#else
+	    handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#endif
         if(!handle) {
             anubis_err("%s\n", errbuf);
             return;
@@ -121,6 +126,12 @@ void anubis_parse_mac_address(char *prefix, json_char *name, json_value *value,
     SET_REQUIRED(required);
 }//end anubis_parse_mac_address
 
+typedef struct npf_if_addr {
+	     struct sockaddr IPAddress;  
+	     struct sockaddr SubnetMask; 
+	     struct sockaddr Broadcast;  
+}npf_if_addr;
+
 void anubis_parse_ip_address(char *prefix, json_char *name, json_value *value,
                              in_addr_t *set_value, int length, const char *device,
                              int *required) {
@@ -132,9 +143,15 @@ void anubis_parse_ip_address(char *prefix, json_char *name, json_value *value,
     in_addr_t addr = -1;
     if(!strcasecmp(value->u.string.ptr, "Myself")) {
         libnet_t *handle = NULL;
-        char errbuf[LIBNET_ERRBUF_SIZE];
-        
-        handle = libnet_init(LIBNET_RAW4, device, errbuf);
+	    char errbuf[LIBNET_ERRBUF_SIZE] = {0};
+#ifdef __CYGWIN__
+	    char device2[ANUBIS_BUFFER_SIZE] = {0};
+	    snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", device);
+	    handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
+#else
+	    handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#endif
+	    
         if(!handle) {
             anubis_err("%s\n", errbuf);
             return;
@@ -312,9 +329,36 @@ static int anubis_check_config_requirement(anubis_t *config) {
         }//end if
     }//end if data-link
     else if(config->socket_type == anubis_network_socket) {
-        
+	    if (!config->device) {
+		    config->device = anubis_default_device();
+		    if (!config->device)
+			    return -1;
+		    else {
+			    config->device = strdup(config->device);
+			    if (!config->device)
+				    anubis_perror("strdup()");
+			    else
+				    anubis_verbose("Socket[%d] Network: \"Device\" chose \"%s\"\n", config->index, config->device);
+		    }
+		    return 0;
+	    }//end if
     }//end if network
     else if(config->socket_type == anubis_transport_socket) {
+#ifdef __CYGWIN__
+	    if (!config->device) {
+		    config->device = anubis_default_device();
+		    if (!config->device)
+			    return -1;
+		    else {
+			    config->device = strdup(config->device);
+			    if (!config->device)
+				    anubis_perror("strdup()");
+			    else
+				    anubis_verbose("Socket[%d] Network: \"Device\" chose \"%s\"\n", config->index, config->device);
+		    }
+		    return 0;
+	    }//end if
+#endif
         if(!config->dst_ip) {
             anubis_err("\"Destination IP Address\" is required\n");
             return -1;
@@ -327,6 +371,21 @@ static int anubis_check_config_requirement(anubis_t *config) {
             
     }//end if transport
     else if(config->socket_type == anubis_application_socket) {
+#ifdef __CYGWIN__
+	    if (!config->device) {
+		    config->device = anubis_default_device();
+		    if (!config->device)
+			    return -1;
+		    else {
+			    config->device = strdup(config->device);
+			    if (!config->device)
+				    anubis_perror("strdup()");
+			    else
+				    anubis_verbose("Socket[%d] Application: \"Device\" chose \"%s\"\n", config->index, config->device);
+		    }
+		    return 0;
+	    }//end if
+#endif
         if(!config->type) {
             anubis_err("\"Type\" is required\n");
             return -1;
@@ -669,6 +728,17 @@ static void anubis_parse_socket_config(json_value *json, anubis_t *config) {
         }//end if
     }//end for
     
+#ifdef __CYGWIN__
+	if (!config->device) {
+		config->device = anubis_default_device();
+		if (config->device) {
+			config->device = strdup(config->device);
+			if (!config->device)
+				anubis_perror("strdup()");
+		}//end if
+	}//end if
+#endif
+	
     for(int i = 0 ; i < options->u.object.length ;i++) {
         json_char *name = options->u.object.values[i].name;
         json_value *value = options->u.object.values[i].value;
@@ -1366,8 +1436,13 @@ void anubis_parser(const char *filename) {
             }//end else
         }//end for
         
-        if(asynchronous)
-            wait(NULL);
+	    if (asynchronous) {
+#ifdef __CYGWIN__
+		    wait(0);
+#else
+		    wait(NULL);
+#endif
+	    }
     }//end if
     else {
         anubis_err("Whole JSON should be an array\n");

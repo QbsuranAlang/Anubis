@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{d0574aad-a92b-4366-bb4a-47fc93f0dc9f}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{7801fa69-40d1-489e-82a4-ae5c4760f0ec}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{9242a362-8e9a-4644-9b5c-a863a6fdcb10}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Make files">
+      <UniqueIdentifier>{0bbb3251-a5bb-4271-b31a-498aab7789d3}</UniqueIdentifier>
+      <Extensions>*.mak</Extensions>
+    </Filter>
+    <Filter Include="Source files\include">
+      <UniqueIdentifier>{e756e356-aac1-4d53-aac4-edce940caee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\include">
+      <UniqueIdentifier>{c6a15c5d-8dc4-4435-837a-483376e192f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\src">
+      <UniqueIdentifier>{7111f99c-0f58-4e42-a90f-3350b53fdebe}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\anubis.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_defaults.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_dumper.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_extra.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_libnet_extension.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_parser.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_parse_headers.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_stream.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_time.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_value_checker.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_value_converter.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\anubis_writer.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json.c">
+      <Filter>Source files\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="debug.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="release.mak">
+      <Filter>Make files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\anubis.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_defaults.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_dumper.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_extra.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_libnet_extension.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_parser.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_parse_headers.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_stream.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_structure.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_time.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_value_checker.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_value_converter.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\anubis_writer.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json.h">
+      <Filter>Header files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

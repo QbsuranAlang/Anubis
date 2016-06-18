@@ -23,6 +23,20 @@
 
 #include "anubis.h"
 
+void anubis_wait_microsecond(u_int32_t microsecond) {
+    anubis_verbose("Sleep for %d microsecond%s", microsecond, microsecond ? "s\n" : "\n");
+    struct timeval delay = { microsecond / 1000000, microsecond % 1000000 };
+    select(0, NULL, NULL, NULL, &delay);
+    
+    /*
+     //sometimes don't work
+     unsigned long nsec = microsecond * 1000;
+     struct timespec delay = { nsec / 1000000000, nsec % 1000000000 };
+     pselect(0, NULL, NULL, NULL, &delay, NULL);
+     */
+    
+}//end anubis_wait_microsecond
+
 void anubis_fragment_offset(int data_len, int mtu, int ip_hl) {
     
     if(ip_hl < 20 || ip_hl > 60 || ip_hl % 4)
@@ -49,12 +63,8 @@ void anubis_fragment_offset(int data_len, int mtu, int ip_hl) {
 void anubis_list_devices(char *device) {
     pcap_if_t *alldevs;
     pcap_if_t *d;
-    char errbuf[PCAP_ERRBUF_SIZE];
+	char errbuf[PCAP_ERRBUF_SIZE] = {0};
     int found = 0;
-    
-#ifdef WIN32
-    anubis_check_root_privilege();
-#endif
     
     if (pcap_findalldevs(&alldevs, errbuf) == -1) {
         anubis_err("%s\n", errbuf);
@@ -70,7 +80,16 @@ void anubis_list_devices(char *device) {
         if(device)
             found = 1;
         
-        anubis_out("%s%s\n",d->name, (d->flags & PCAP_IF_LOOPBACK) ? " [Loopback]" : "");
+#ifdef __CYGWIN__
+	    char *name = d->name;
+	    char *tmp = NULL;
+	    if (!(tmp = strstr(name, "{")))
+		    tmp = name;
+	    anubis_out("Name: %s%s\n", tmp, (d->flags & PCAP_IF_LOOPBACK) ? " [Loopback]" : "");
+#else
+	    anubis_out("Name: %s%s\n", d->name, (d->flags & PCAP_IF_LOOPBACK) ? " [Loopback]" : "");
+#endif
+        
         if (d->description)
             anubis_out("\tDescription: %s\n",d->description);
         
@@ -112,9 +131,9 @@ void anubis_list_devices(char *device) {
                                              ntop_buf, sizeof ntop_buf));
                     break;
                     
+#ifndef __CYGWIN__
                 case AF_LINK: {
                     if(a->addr) {
-#ifndef WIN32
 #ifndef __linux
 						struct sockaddr_dl *sdl = (struct sockaddr_dl *)a->addr;
 						if (sdl->sdl_alen == 6) {
@@ -129,13 +148,10 @@ void anubis_list_devices(char *device) {
 							anubis_out("\t\tAddress: %s\n", anubis_mac_ntoa((u_int8_t *)(sll->sll_addr)));
 						}
 #endif
-#else
-						//MIB_IPNETROW *iprow = (MIB_IPNETROW *)a->addr;
-#endif
                     }
                 }//end case AF_LINK
                     break;
-                    
+#endif
                 default:
                     anubis_out("\tAddress Family: Unknown (%d)\n", a->addr->sa_family);
                     break;
@@ -143,7 +159,7 @@ void anubis_list_devices(char *device) {
         }//end for address
 
 		//windows mac address
-#ifdef WIN32
+#ifdef __CYGWIN__
 		char errbuf2[LIBNET_ERRBUF_SIZE] = { 0 };
 		libnet_t *libnet_handle = libnet_init(LIBNET_RAW4, d->name, errbuf2);
 		if (!libnet_handle) {

@@ -107,9 +107,10 @@ bad:
 }//end anubis_build_icmpv4_unreach
 
 libnet_t *
-anubis_libnet_init(int injection_type, const char *device, char *err_buf) {
-    libnet_t *l = libnet_init(injection_type, device, err_buf);
-    
+anubis_libnet_init(int injection_type, const char *device, char *errbuf) {
+    libnet_t *l = NULL;
+	l = libnet_init(injection_type, device, errbuf);
+	
     if(!l)
         return NULL;
     
@@ -118,7 +119,7 @@ anubis_libnet_init(int injection_type, const char *device, char *err_buf) {
     uint spoof_eth_src = 1;
     if ((injection_type == LIBNET_LINK || injection_type == LIBNET_LINK_ADV) &&
         ioctl(l->fd, BIOCSHDRCMPLT, &spoof_eth_src) == -1) {
-        snprintf(err_buf, LIBNET_ERRBUF_SIZE, "libnet_open_link(): BIOCSHDRCMPLT: %s", strerror(errno));
+        snprintf(errbuf, LIBNET_ERRBUF_SIZE, "libnet_open_link(): BIOCSHDRCMPLT: %s", strerror(errno));
         goto bad;
     }
 #endif

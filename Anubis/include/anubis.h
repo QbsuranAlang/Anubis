@@ -34,48 +34,47 @@
 #ifndef anubis_h
 #define anubis_h
 
-#ifndef WIN32
-    #define __FAVOR_BSD
-    #include <unistd.h>
-    #include <sys/time.h>
-    #include <sys/param.h>
-    #include <sys/sysctl.h>
-    #include <math.h>
-    #include <ifaddrs.h>
+#define __FAVOR_BSD
+#include <unistd.h>
+#include <sys/time.h>
+#include <sys/param.h>
+#include <math.h>
+#include <ifaddrs.h>
     //#define PACK( __Declaration__ ) __Declaration__ __attribute__((__packed__))
-    #ifndef _GNU_SOURCE
-    #define _GNU_SOURCE
-    #endif
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 
-    #include <getopt.h>
+#include <getopt.h>
 
-    #ifndef __linux
+#ifndef __linux
     /*BSD*/
-        #include <net/bpf.h>
-        #include <net/if_dl.h>
-        #include <net/if.h>
-        #include <netinet/in.h>
-    #else
+#ifndef __CYGWIN__
+#include <net/bpf.h>
+#include <net/if_dl.h>
+#include <sys/sysctl.h>
+#endif
+#include <net/if.h>
+#include <netinet/in.h>
+#include <pwd.h>
+#else
     /*Linux*/
-        #define AF_LINK AF_PACKET
-        #include <linux/if_ether.h>
-        #include <netpacket/packet.h>
-        #include <linux/if_link.h>
-        #include <sys/types.h>
-        #include <sys/wait.h>
-    #endif
-#else /*End if not defined win32*/
+#define AF_LINK AF_PACKET
+#include <linux/if_ether.h>
+#include <netpacket/packet.h>
+#include <linux/if_link.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#endif
     //#define PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop) )
-    #include "anubis_win32.h"
-#endif /*End if defined win32*/
 
 #include "json.h"
 #include <dnet.h>
 #include <pcap.h>
 #include <libnet.h>
-#ifdef WIN32
-#define _WINSOCKAPI_
-#endif
+//#ifdef WIN32
+//#define _WINSOCKAPI_
+//#endif
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/x509.h>
@@ -90,7 +89,7 @@
 #include <errno.h>
 #include <stdarg.h>
 
-#define ANUBIS_VERSION "1.0"
+#define ANUBIS_VERSION "1.1.2"
 
 #ifndef MAC_ADDRSTRLEN
 #define MAC_ADDRSTRLEN 2*6+5+1
@@ -167,5 +166,9 @@ extern int asynchronous;
 extern FILE *in_stream;
 extern FILE *out_stream;
 extern FILE *err_stream;
+
+#ifdef __CYGWIN__
+int _errno;
+#endif
 
 #endif /* anubis_h */

@@ -9,7 +9,6 @@ anubis_SOURCES = missing/snprintf.c \
                 missing/strlcpy.c \
                 missing/strcasecmp.c \
                 json.c \
-                anubis_win32.c \
                 anubis_defaults.c \
                 anubis_parse_headers.c \
                 anubis_parser.c \

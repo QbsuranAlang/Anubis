@@ -27,8 +27,7 @@
                     {
                         "Packet Option": {
                             "Infinite loop": "enable",  /*Enable infinite loop*/
-                            "Interval": 1000000, /*Interval: 1s*/
-                            "Amount": 5
+                            "Interval": 1000000 /*Interval: 1s*/
                         }
                     }
                 ]

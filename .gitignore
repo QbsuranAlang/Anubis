@@ -27,5 +27,7 @@ Packages
 LatestBuild
 
 # windows
-*.dll
-*.mp4
+.deps
+.vc
+*.o
+generator

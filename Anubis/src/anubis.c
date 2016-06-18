@@ -59,11 +59,7 @@ static struct option long_options[] = {
     {NULL, 0, NULL, 0}};
 
 static void anubis_SIGINT_signal_handler(int sig) {
-#ifndef WIN32
     anubis_err("signal(): %s\n", strsignal(sig));
-#else
-    anubis_err("signal(): %d\n", sig);
-#endif
     anubis_err("Anubis: bye~\n");
     
     //unregister and raise the signal again
@@ -75,13 +71,20 @@ static void anubis_SIGINT_signal_handler(int sig) {
 
 static void anubis_check_root_privilege(void) {
     int is_root = 0;
-#ifndef WIN32
+#ifndef __CYGWIN__
     is_root = ((getuid() == 0) && (getegid() == 0)) ? 1 : 0;
 #else
-    char buffer[UNLEN + 1] = {0};
-    DWORD buffer_len = UNLEN + 1;
-    GetUserNameA(buffer, &buffer_len);
-    is_root = strcmp(buffer, "Administrator") == 0 ? 1 : 0;
+	struct passwd *pw;
+	uid_t uid;
+	uid = geteuid();
+	pw = getpwuid(uid);
+	if (pw) {
+		if (!strcmp(pw->pw_name, "Administrator"))
+			is_root = 1;
+	}
+	else {
+		anubis_perror("getpwuid()");
+	}
 #endif
     if(!is_root) {
         anubis_err("Ah ah ah! You didn't say the magic word!\n");
@@ -98,6 +101,8 @@ int main(int argc, const char * argv[]) {
     int fragment_mode = 0;
     int injection_mode = 0;
     int devices_mode = 0;
+    int help_mode = 0;
+    int version_mode = 0;
     int option_index = 0;
     
     //defaults
@@ -203,13 +208,13 @@ int main(int argc, const char * argv[]) {
                 
                 //others
             case 's': //version
-                version();
+                version_mode = 1;
                 break;
                 
             case 'h': //help
             case '?':
             default:
-                usage(argv[0]);
+                help_mode = 1;
                 break;
         }
     }//end while
@@ -218,30 +223,60 @@ int main(int argc, const char * argv[]) {
         usage(argv[0]);
     }//end if
     
+    //help mode is the first priority
+    if(help_mode) {
+        usage(argv[0]);
+    }//end if help
+    
+    if(version_mode) {
+        version();
+    }//end if
+    
     //only one mode
     if((injection_mode + fragment_mode + devices_mode) > 1) {
-        anubis_err("{--fragment --MTU --ip-header-length}, {--filename} or {--list-devices} should not be appear at the same time\n");
+	    anubis_err("{--filename}, {--fragment --MTU --ip-header-length} or {--list-devices} should not be appear at the same time\n");
         usage(argv[0]);
     }//end if
     
     if(fragment_mode) {
+        if(data_len == 0) {
+            anubis_err("Please specify -F --fragment\n");
+            exit(1);
+        }//end if
+        
+        if(mtu == 0) {
+            anubis_err("Please specify -M --MTU\n");
+            exit(1);
+        }//end if
+        
+        if(ip_hl == 0) {
+            anubis_err("Please specify -l --ip-header-length\n");
+            exit(1);
+        }//end if
+        
         //calculate fragement offset
         anubis_fragment_offset(data_len, mtu, ip_hl);
         exit(0);
     }//end if
     else if(injection_mode) {
-        anubis_check_root_privilege();
         //parse packet
         if(!filename) {
-            usage(argv[0]);
+            anubis_err("Please specify -f --filename\n");
+	        exit(1);
         }//end if
         else {
+#ifndef __CYGWIN__
+            anubis_check_root_privilege();
+#endif
             anubis_parser(filename);
         }//end else
         
         exit(0);
     }//end if
     else if(devices_mode) {
+#ifndef __CYGWIN__
+        anubis_check_root_privilege();
+#endif
         anubis_list_devices(device);
         exit(0);
     }//end if devices
@@ -280,5 +315,6 @@ static void usage(const char *cmd) {
     
     fprintf(err_stream, "\n{} is a group options, <> is required, [] is optional\n");
     anubis_err("Report bugs to <jr89197@hotmail.com>\n");
+    anubis_err("Github: https://github.com/QbsuranAlang/Anubis\n");
     exit(1);
 }//end usage

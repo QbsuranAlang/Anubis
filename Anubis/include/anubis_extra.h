@@ -24,6 +24,7 @@
 #ifndef anubis_extra_h
 #define anubis_extra_h
 
+void anubis_wait_microsecond(u_int32_t msec);
 void anubis_fragment_offset(int data_len, int mtu, int ip_hl);
 void anubis_list_devices(char *device);
 

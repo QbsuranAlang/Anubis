@@ -54,15 +54,30 @@ char *anubis_default_device(void) {
         
     }//end for
     
+	pcap_freealldevs(d);
+	
+	char *tmp = NULL;
+#ifndef __CYGWIN__
+	tmp = device;
     anubis_verbose("Select default device: \"%s\"\n", device);
-    
-    pcap_freealldevs(d);
-    return device;
+#else
+	if (!(tmp = strstr(device, "{")))
+		tmp = device;
+	anubis_verbose("Select default device: \"%s\"\n", tmp);
+#endif
+    return tmp;
 }//end anubis_default_device
 
 u_int8_t *anubis_default_mac_address(const char *device) {
     char errbuf[LIBNET_ERRBUF_SIZE];
-    libnet_t *handle = libnet_init(LIBNET_RAW4, device, errbuf);
+	libnet_t *handle = NULL;
+#ifdef __CYGWIN__
+	char device2[ANUBIS_BUFFER_SIZE] = {0};
+	snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", device);
+	handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
+#else
+	handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#endif
     static u_int8_t *address = NULL;
     
     if(!handle) {
@@ -85,8 +100,16 @@ struct libnet_ethernet_hdr anubis_default_ethernet_header(const char *device) {
     
     memset(&ethernet_hdr, 0, sizeof(ethernet_hdr));
     
-    char errbuf[LIBNET_ERRBUF_SIZE];
-    libnet_t *handle = libnet_init(LIBNET_RAW4, device, errbuf);
+	char errbuf[LIBNET_ERRBUF_SIZE] = {0};
+	libnet_t *handle = NULL;
+#ifdef __CYGWIN__
+	char device2[ANUBIS_BUFFER_SIZE] = {0};
+	snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", device);
+	handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
+#else
+	handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#endif
+	
     if(!handle) {
         anubis_err("%s\n", errbuf);
         return ethernet_hdr;
@@ -153,7 +176,15 @@ struct libnet_ipv4_hdr anubis_default_ip_header(const char *device) {
     
     ip.ip_ttl = ttl;
     
-    libnet_t *handle = libnet_init(LIBNET_NONE, device, errbuf);
+	libnet_t *handle = NULL;
+#ifdef __CYGWIN__
+	char device2[ANUBIS_BUFFER_SIZE] = {0};
+	snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", device);
+	handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
+#else
+	handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#endif
+	
     if(!handle) {
         anubis_err("%s\n", errbuf);
         return ip;
@@ -246,7 +277,15 @@ struct libnet_dhcpv4_hdr anubis_default_dhcp_header(const char *device) {
     dhcp_hdr.dhcp_magic = DHCP_MAGIC;
     
     char errbuf[LIBNET_ERRBUF_SIZE];
-    libnet_t *handle = libnet_init(LIBNET_RAW4, device, errbuf);
+	libnet_t *handle = NULL;
+#ifdef __CYGWIN__
+	char device2[ANUBIS_BUFFER_SIZE] = {0};
+	snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", device);
+	handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
+#else
+	handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#endif
+	
     if(!handle) {
         anubis_err("%s\n", errbuf);
         return dhcp_hdr;

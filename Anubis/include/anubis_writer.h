@@ -24,7 +24,6 @@
 #ifndef anubis_writer_h
 #define anubis_writer_h
 
-void anubis_wait_microsecond(u_int32_t msec);
 void anubis_write_data_link_or_network(anubis_t *config);
 void anubis_write_transport(anubis_t *config);
 void anubis_write_application(anubis_t *config);

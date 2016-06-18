@@ -28,7 +28,7 @@ void anubis_perror(char *s);
 void anubis_ssl_perror(char *s);
 void anubis_in(char *out_buffer, int out_length);
 void anubis_in_stream(FILE *in_fp, char *out_buffer, int out_length);
-#ifndef WIN32
+#ifndef __CYGWIN__
 void anubis_err(const char *fmt, ...) __attribute__((format (__printf__, 1, 2)));
 void anubis_out(const char *fmt, ...) __attribute__((format (__printf__, 1, 2)));
 void anubis_verbose(const char *fmt, ...) __attribute__((format (__printf__, 1, 2)));

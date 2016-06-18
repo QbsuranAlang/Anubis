@@ -42,21 +42,7 @@ static u_int16_t anubis_checksum(u_int16_t *data, int len) {
         sum = (sum & 0xffff) + (sum >> 16);
     
     return ~sum;
-}
-
-void anubis_wait_microsecond(u_int32_t microsecond) {
-    anubis_verbose("Sleep for %d microsecond%s", microsecond, microsecond ? "s\n" : "\n");
-    struct timeval delay = { microsecond / 1000000, microsecond % 1000000 };
-    select(0, NULL, NULL, NULL, &delay);
-
-    /*
-     //sometimes don't work
-    unsigned long nsec = microsecond * 1000;
-    struct timespec delay = { nsec / 1000000000, nsec % 1000000000 };
-    pselect(0, NULL, NULL, NULL, &delay, NULL);
-    */
-    
-}//end anubis_wait_microsecond
+}//end anubis_checksum
 
 static void anubis_build_headers(libnet_t *handle, anubis_packet_t *packet) {
     
@@ -445,8 +431,14 @@ void anubis_write_data_link_or_network(anubis_t *config) {
         return;
     }
     
-    libnet_handle = anubis_libnet_init(libnet_type, config->device, errbuf);
-    
+#ifdef __CYGWIN__
+	char device2[ANUBIS_BUFFER_SIZE] = {0};
+	snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", config->device);
+	libnet_handle = anubis_libnet_init(libnet_type, device2, errbuf);
+#else
+	libnet_handle = anubis_libnet_init(libnet_type, config->device, errbuf);
+#endif
+	
     if(!libnet_handle) {
         anubis_err("%s\n", errbuf);
         return;
@@ -520,10 +512,7 @@ void anubis_write_data_link_or_network(anubis_t *config) {
  http://stackoverflow.com/questions/20616029/os-x-equivalent-of-so-bindtodevice
  */
 int anubis_bind_to_device(int sock, int family, const char *devicename, u_int16_t port) {
-#ifdef WIN32
-	return 0;
 
-#else
     struct ifaddrs *pList = NULL;
     struct ifaddrs *pAdapter = NULL;
     struct sockaddr_in pAdapterFound = {0};
@@ -561,12 +550,14 @@ int anubis_bind_to_device(int sock, int family, const char *devicename, u_int16_
     }//end if
     
     int addrsize = (family == AF_INET6) ? sizeof(struct sockaddr_in6) : sizeof(struct sockaddr_in);
-    pAdapterFound.sin_family = family; //always bind to chosen address type
-#ifndef __linux
-    pAdapterFound.sin_len = sizeof(struct sockaddr_in);
+	if (!found) {
+		pAdapterFound.sin_family = family; //always bind to chosen address type
+#if !(__linux) && !(__CYGWIN__)
+		pAdapterFound.sin_len = sizeof(struct sockaddr_in);
 #endif
-    pAdapterFound.sin_port = htons(port);
-
+	}//end if not found
+	pAdapterFound.sin_port = htons(port);
+	
     //if device is given and found, bind to device_addr:port
     
     //if device is not given and not found, bind to 0.0.0.0:port
@@ -599,22 +590,21 @@ int anubis_bind_to_device(int sock, int family, const char *devicename, u_int16_
     freeifaddrs(pList);
     
     return bindresult;
-#endif
 }//end anubis_bind_to_device
 
 static int anubis_set_socket_option(anubis_t *config, int sd) {
     
-#if !(WIN32)
-    int n = 1;
-#if (__svr4__)
-    void *nptr = &n;
+#ifdef __svr4__
+	int n = 1;
+	void *nptr = &n;
+#elif __CYGWIN__
+	int n = 1;
+	int *nptr = &n;
 #else
-    int *nptr = &n;
-#endif  /* __svr4__ */
-#else
-    BOOL n;
+	int n = 1;
 	char *nptr = (char *)&n;
 #endif
+	
     int len;
     
 #ifdef SO_SNDBUF
@@ -684,12 +674,14 @@ static int anubis_set_socket_option(anubis_t *config, int sd) {
      * to send packets to a broadcast  address.   This  option  has  no
      * effect on stream-oriented sockets.
      */
-    anubis_verbose("Setting socket option: \"SO_BROADCAST\"\n");
-    if (setsockopt(sd, SOL_SOCKET, SO_BROADCAST, nptr, sizeof(n)) == -1) {
-        anubis_perror("setsockopt(): set SO_BROADCAST failed");
-        close(sd);
-        return -1;
-    }//ned if
+	if (config->socket_type != anubis_application_socket) {
+		anubis_verbose("Setting socket option: \"SO_BROADCAST\"\n");
+		if (setsockopt(sd, SOL_SOCKET, SO_BROADCAST, nptr, sizeof(n)) == -1) {
+			anubis_perror("setsockopt(): set SO_BROADCAST failed");
+			close(sd);
+			return -1;
+		}//ned if
+	}
 #endif  /*  SO_BROADCAST  */
     
     /*bind to device*/
@@ -700,8 +692,9 @@ static int anubis_set_socket_option(anubis_t *config, int sd) {
         return -1;
     }//end if
     
-    
-    if(config->type == SOCK_DGRAM || config->type == SOCK_STREAM) {
+#ifdef SO_REUSEADDR
+	if ((config->socket_type != anubis_application_socket) &&
+	    (config->type == SOCK_DGRAM || config->type == SOCK_STREAM)) {
         n = 1;
         anubis_verbose("Setting socket option: \"SO_REUSEADDR\"\n");
         if(setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (const void*) nptr, (socklen_t) sizeof(n)) == -1) {
@@ -709,8 +702,9 @@ static int anubis_set_socket_option(anubis_t *config, int sd) {
             close(sd);
             return -1;
         }
-        
-#if ((SO_REUSEPORT) && !(WIN32))
+#endif
+	    
+#ifdef SO_REUSEPORT
         anubis_verbose("Setting socket option: \"SO_REUSEPORT\"\n");
         if(setsockopt(sd, SOL_SOCKET, SO_REUSEPORT, (const void*) nptr, (socklen_t) sizeof(n)) == -1) {
             anubis_perror("setsockopt(): set SO_REUSEPORT failed");
@@ -725,9 +719,7 @@ static int anubis_set_socket_option(anubis_t *config, int sd) {
         struct ifaddrs *pList = NULL;
         struct ifaddrs *pAdapter = NULL;
         struct sockaddr_in pAdapterFound = {0};
-#ifdef WIN32
-        //windows
-#else
+	    
         int result = getifaddrs(&pList);
         
         if (result < 0) {
@@ -750,7 +742,7 @@ static int anubis_set_socket_option(anubis_t *config, int sd) {
         }//end while
         
         freeifaddrs(pList);
-#endif
+	    
         struct ip_mreq mreq = {0};
         memmove(&mreq.imr_interface, &pAdapterFound.sin_addr, sizeof(mreq.imr_interface));
         
@@ -852,14 +844,16 @@ void anubis_write_transport(anubis_t *config) {
     u_int64_t outter_amount = 0;
     libnet_t *libnet_handle = NULL;
     struct sockaddr_in sin = {0};
-#ifndef WIN32
-    int sd;
+	int sd;
+    
+#ifdef __CYGWIN__
+	char device2[ANUBIS_BUFFER_SIZE] = {0};
+	snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", config->device);
+	libnet_handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
 #else
-    SOCKET sd;
+	libnet_handle = anubis_libnet_init(LIBNET_RAW4, config->device, errbuf);
 #endif
-    
-    libnet_handle = anubis_libnet_init(LIBNET_RAW4, config->device, errbuf);
-    
+
     if(!libnet_handle) {
         anubis_err("%s\n", errbuf);
         return;
@@ -922,29 +916,6 @@ void anubis_write_transport(anubis_t *config) {
                 continue;
             }//end if
             
-#if 0
-            /* set port for TCP */
-            /*
-             *  XXX - should first check to see if there's a pblock for a TCP
-             *  header, if not we can use a dummy value for the port.
-             */
-            if (ip_hdr.ip_p == IPPROTO_TCP) {
-                struct libnet_tcp_hdr *tcph_p =
-                (struct libnet_tcp_hdr *)(packet + (ip_hdr.ip_hl << 2));
-                sin.sin_port = tcph_p->th_dport;
-            }
-            /* set port for UDP */
-            /*
-             *  XXX - should first check to see if there's a pblock for a UDP
-             *  header, if not we can use a dummy value for the port.
-             */
-            else if (ip_hdr.ip_p == IPPROTO_UDP) {
-                struct libnet_udp_hdr *udph_p =
-                (struct libnet_udp_hdr *)(packet + (ip_hdr.ip_hl << 2));
-                sin.sin_port = udph_p->uh_dport;
-            }
-#endif /* WIN32 */
-            
             //inject amount
             if(packet->infinite_loop)
                 inner_amount = -1;
@@ -976,11 +947,13 @@ void anubis_write_transport(anubis_t *config) {
                 }//end if
             }//end while inner inject
             
+#ifndef __CYGWIN__
             //free
             if (libnet_handle->aligner > 0) {
                 content = content - libnet_handle->aligner;
             }//end if
             free(content);
+#endif
             content = NULL;
         }//end for
         
@@ -1010,11 +983,7 @@ static void anubis_write_datagram(anubis_t *config) {
         struct sockaddr_in server_sin = {0};
         struct sockaddr_in client_sin = {0};
         
-#ifndef WIN32
         int sd;
-#else
-        SOCKET sd;
-#endif
         
         SSL_CTX *ctx = NULL;
         
@@ -1143,14 +1112,16 @@ static void anubis_write_datagram(anubis_t *config) {
         libnet_t *libnet_handle = NULL;
         
         struct timeval timeout;
-#ifndef WIN32
         int sd;
-#else
-        SOCKET sd;
-#endif
         int len;
         
-        libnet_handle = anubis_libnet_init(LIBNET_RAW4, config->device, errbuf);
+#ifdef __CYGWIN__
+	    char device[ANUBIS_BUFFER_SIZE] = {0};
+	    snprintf(device, sizeof(device), "\\Device\\NPF_%s", config->device);
+	    libnet_handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#else
+	    libnet_handle = anubis_libnet_init(LIBNET_RAW4, config->device, errbuf);
+#endif
         
         if(!libnet_handle) {
             anubis_err("%s\n", errbuf);
@@ -1271,7 +1242,7 @@ static void anubis_write_datagram(anubis_t *config) {
                             dst_sin.sin_family = AF_INET;
                             dst_sin.sin_addr.s_addr = config->dst_ip;
                             dst_sin.sin_port = htons(config->dst_port);
-#if !(__linux) && !(WIN32)
+#if !(__linux) && !(__CYGWIN__)
 							dst_sin.sin_len = sizeof(dst_sin);
 #endif
                             anubis_out("Send to %s:%d\n", anubis_ip_ntoa(dst_sin.sin_addr.s_addr), ntohs(dst_sin.sin_port));
@@ -1305,7 +1276,7 @@ static void anubis_write_datagram(anubis_t *config) {
                             dst_sin.sin_family = AF_INET;
                             dst_sin.sin_addr.s_addr = config->dst_ip;
                             dst_sin.sin_port = htons(config->dst_port);
-#if !(__linux) && !(WIN32)
+#if !(__linux) && !(__CYGWIN__)
                             dst_sin.sin_len = sizeof(dst_sin);
 #endif
                             anubis_out("Send to %s:%d\n", anubis_ip_ntoa(dst_sin.sin_addr.s_addr), ntohs(dst_sin.sin_port));
@@ -1368,7 +1339,7 @@ static void anubis_write_datagram(anubis_t *config) {
                             dst_sin.sin_family = AF_INET;
                             dst_sin.sin_addr.s_addr = config->dst_ip;
                             dst_sin.sin_port = htons(config->dst_port);
-#if !(__linux) && !(WIN32)
+#if !(__linux) && !(__CYGWIN__)
                             dst_sin.sin_len = sizeof(dst_sin);
 #endif
                             
@@ -1386,11 +1357,13 @@ static void anubis_write_datagram(anubis_t *config) {
                                     anubis_dump_libnet_content(libnet_handle, 1, 1);
                             }//end else
                             
+#ifndef __CYGWIN__
                             //free
                             if (libnet_handle->aligner > 0) {
                                 content = content - libnet_handle->aligner;
                             }//end if
                             free(content);
+#endif
                             content = NULL;
                         }//end else
                         
@@ -1412,7 +1385,7 @@ static void anubis_write_datagram(anubis_t *config) {
                         src_sin.sin_family = AF_INET;
                         src_sin.sin_addr.s_addr = INADDR_ANY;
                         src_sin.sin_port = htons(config->src_port);
-#if !(__linux) && !(WIN32)
+#if !(__linux) && !(__CYGWIN__)
                         src_sin.sin_len = sizeof(src_sin);
 #endif
                         anubis_out("Receiving from port localhost:%d\n", config->src_port);
@@ -1421,7 +1394,6 @@ static void anubis_write_datagram(anubis_t *config) {
                         int ret = (int)recvfrom(sd, buffer, sizeof(buffer),
                                                 0,
                                                 (struct sockaddr *)&src_sin, (socklen_t *)&len);
-                        
                         if(ret < 0) {
                             if(errno == EAGAIN) {
                                 anubis_verbose("Timeout\n");
@@ -1496,7 +1468,13 @@ static void anubis_handle_tcp_socket(anubis_t *config, u_int64_t outter_amount, 
     char errbuf[LIBNET_ERRBUF_SIZE] = {0};
     SSL *ssl = NULL;
     
-    libnet_handle = anubis_libnet_init(LIBNET_RAW4, config->device, errbuf);
+#ifdef __CYGWIN__
+	char device[ANUBIS_BUFFER_SIZE] = {0};
+	snprintf(device, sizeof(device), "\\Device\\NPF_%s", config->device);
+	libnet_handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#else
+	libnet_handle = anubis_libnet_init(LIBNET_RAW4, config->device, errbuf);
+#endif
     
     if(!libnet_handle) {
         anubis_err("%s\n", errbuf);
@@ -1729,11 +1707,13 @@ static void anubis_handle_tcp_socket(anubis_t *config, u_int64_t outter_amount, 
                             anubis_dump_libnet_content(libnet_handle, 1, 1);
                     }//end else
                     
+#ifndef __CYGWIN__
                     //free
                     if (libnet_handle->aligner > 0) {
                         content = content - libnet_handle->aligner;
                     }//end if
                     free(content);
+#endif
                     content = NULL;
                 }
             }//end if send
@@ -1821,11 +1801,7 @@ static void anubis_write_stream(anubis_t *config) {
     struct timeval timeout;
     struct sockaddr_in server_sin = {0};
     
-#ifndef WIN32
     int sd;
-#else
-    SOCKET sd;
-#endif
     
     SSL_CTX *ctx = NULL;
     
@@ -1947,7 +1923,7 @@ static void anubis_write_stream(anubis_t *config) {
         server_sin.sin_family = AF_INET;
         server_sin.sin_addr.s_addr = config->dst_ip;
         server_sin.sin_port = htons(config->dst_port);
-#if !(__linux) && !(WIN32)
+#if !(__linux) && !(__CYGWIN__)
         server_sin.sin_len = sizeof(struct sockaddr_in);
 #endif
         

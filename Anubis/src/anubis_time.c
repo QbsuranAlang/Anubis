@@ -26,13 +26,7 @@
 void anubis_srand(void) {
     /*from libnet/src/libnet_prand.c*/
     
-#if !WIN32
     struct timeval seed;
-#endif
-    
-#if WIN32
-    srand((unsigned)time(NULL));
-#else
     if (gettimeofday(&seed, NULL) == -1)
         srand((unsigned)time(NULL));
     
@@ -40,7 +34,6 @@ void anubis_srand(void) {
      *  More entropy then just seeding with time(2).
      */
     srandom((unsigned)(seed.tv_sec ^ seed.tv_usec));
-#endif
 }//end anubis_srand
 
 char *anubis_current_time_format(void) {
@@ -63,7 +56,7 @@ char *anubis_current_time_format(void) {
     which = (which + 1 == ANUBIS_BUFFER_SIZE ? 0 : which + 1);
     memset(time_buffer[which], 0, sizeof(time_buffer[which]));
     /*
-#ifndef WIN32
+#ifndef __CYGWIN__
     tm_info = localtime(&tv.tv_sec);
     strftime(time_buffer[which], sizeof(time_buffer[which]), "%Y-%m-%d %H:%M:%S", tm_info);
 #else

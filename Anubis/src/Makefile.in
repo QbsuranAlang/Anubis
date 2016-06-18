@@ -103,12 +103,11 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_anubis_OBJECTS = missing/snprintf.$(OBJEXT) \
 	missing/strdup.$(OBJEXT) missing/strlcat.$(OBJEXT) \
 	missing/strlcpy.$(OBJEXT) missing/strcasecmp.$(OBJEXT) \
-	json.$(OBJEXT) anubis_win32.$(OBJEXT) \
-	anubis_defaults.$(OBJEXT) anubis_parse_headers.$(OBJEXT) \
-	anubis_parser.$(OBJEXT) anubis_stream.$(OBJEXT) \
-	anubis_time.$(OBJEXT) anubis_value_converter.$(OBJEXT) \
-	anubis_writer.$(OBJEXT) anubis_dumper.$(OBJEXT) \
-	anubis_libnet_extension.$(OBJEXT) \
+	json.$(OBJEXT) anubis_defaults.$(OBJEXT) \
+	anubis_parse_headers.$(OBJEXT) anubis_parser.$(OBJEXT) \
+	anubis_stream.$(OBJEXT) anubis_time.$(OBJEXT) \
+	anubis_value_converter.$(OBJEXT) anubis_writer.$(OBJEXT) \
+	anubis_dumper.$(OBJEXT) anubis_libnet_extension.$(OBJEXT) \
 	anubis_value_checker.$(OBJEXT) anubis_extra.$(OBJEXT) \
 	anubis.$(OBJEXT)
 anubis_OBJECTS = $(am_anubis_OBJECTS)
@@ -308,7 +307,6 @@ anubis_SOURCES = missing/snprintf.c \
                 missing/strlcpy.c \
                 missing/strcasecmp.c \
                 json.c \
-                anubis_win32.c \
                 anubis_defaults.c \
                 anubis_parse_headers.c \
                 anubis_parser.c \
@@ -437,7 +435,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_time.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_value_checker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_value_converter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_win32.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_writer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/json.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@missing/$(DEPDIR)/snprintf.Po@am__quote@

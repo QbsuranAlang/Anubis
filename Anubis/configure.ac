@@ -9,7 +9,7 @@ AC_PREREQ([2.69])
 # AC_SUBST(ac_aux_dir, [config])
 
 # init autoconf 
-AC_INIT(anubis, 1.0, jr89197@hotmail.com)
+AC_INIT(anubis, 1.1.2, jr89197@hotmail.com)
 AM_INIT_AUTOMAKE([subdir-objects])
 
 # main program

@@ -103,12 +103,11 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_anubis_OBJECTS = missing/snprintf.$(OBJEXT) \
 	missing/strdup.$(OBJEXT) missing/strlcat.$(OBJEXT) \
 	missing/strlcpy.$(OBJEXT) missing/strcasecmp.$(OBJEXT) \
-	json.$(OBJEXT) anubis_win32.$(OBJEXT) \
-	anubis_defaults.$(OBJEXT) anubis_parse_headers.$(OBJEXT) \
-	anubis_parser.$(OBJEXT) anubis_stream.$(OBJEXT) \
-	anubis_time.$(OBJEXT) anubis_value_converter.$(OBJEXT) \
-	anubis_writer.$(OBJEXT) anubis_dumper.$(OBJEXT) \
-	anubis_libnet_extension.$(OBJEXT) \
+	json.$(OBJEXT) anubis_defaults.$(OBJEXT) \
+	anubis_parse_headers.$(OBJEXT) anubis_parser.$(OBJEXT) \
+	anubis_stream.$(OBJEXT) anubis_time.$(OBJEXT) \
+	anubis_value_converter.$(OBJEXT) anubis_writer.$(OBJEXT) \
+	anubis_dumper.$(OBJEXT) anubis_libnet_extension.$(OBJEXT) \
 	anubis_value_checker.$(OBJEXT) anubis_extra.$(OBJEXT) \
 	anubis.$(OBJEXT)
 anubis_OBJECTS = $(am_anubis_OBJECTS)
@@ -248,15 +247,15 @@ OBJEXT = o
 PACKAGE = anubis
 PACKAGE_BUGREPORT = jr89197@hotmail.com
 PACKAGE_NAME = anubis
-PACKAGE_STRING = anubis 1.0
+PACKAGE_STRING = anubis 1.1.2
 PACKAGE_TARNAME = anubis
 PACKAGE_URL = 
-PACKAGE_VERSION = 1.0
+PACKAGE_VERSION = 1.1.2
 PATH_SEPARATOR = :
 SET_MAKE = 
 SHELL = /bin/sh
 STRIP = 
-VERSION = 1.0
+VERSION = 1.1.2
 abs_builddir = /Volumes/Transcend/Dropbox/專研/Anubis/Anubis/src
 abs_srcdir = /Volumes/Transcend/Dropbox/專研/Anubis/Anubis/src
 abs_top_builddir = /Volumes/Transcend/Dropbox/專研/Anubis/Anubis
@@ -288,7 +287,7 @@ mandir = ${datarootdir}/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr
+prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -308,7 +307,6 @@ anubis_SOURCES = missing/snprintf.c \
                 missing/strlcpy.c \
                 missing/strcasecmp.c \
                 json.c \
-                anubis_win32.c \
                 anubis_defaults.c \
                 anubis_parse_headers.c \
                 anubis_parser.c \
@@ -437,7 +435,6 @@ include ./$(DEPDIR)/anubis_stream.Po
 include ./$(DEPDIR)/anubis_time.Po
 include ./$(DEPDIR)/anubis_value_checker.Po
 include ./$(DEPDIR)/anubis_value_converter.Po
-include ./$(DEPDIR)/anubis_win32.Po
 include ./$(DEPDIR)/anubis_writer.Po
 include ./$(DEPDIR)/json.Po
 include missing/$(DEPDIR)/snprintf.Po

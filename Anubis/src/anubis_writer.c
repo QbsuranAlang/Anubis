@@ -674,23 +674,37 @@ static int anubis_set_socket_option(anubis_t *config, int sd) {
      * to send packets to a broadcast  address.   This  option  has  no
      * effect on stream-oriented sockets.
      */
-	if (config->socket_type != anubis_application_socket) {
+    /*Windows(cygwin) application socket and tcp can't not broadcast*/
+#ifdef __CYGWIN__
+	if (!(config->socket_type == anubis_application_socket &&
+          config->protocol == IPPROTO_TCP)) {
+#endif
 		anubis_verbose("Setting socket option: \"SO_BROADCAST\"\n");
 		if (setsockopt(sd, SOL_SOCKET, SO_BROADCAST, nptr, sizeof(n)) == -1) {
 			anubis_perror("setsockopt(): set SO_BROADCAST failed");
 			close(sd);
 			return -1;
-		}//ned if
+		}//end if
+#ifdef __CYGWIN__
 	}
+#endif
 #endif  /*  SO_BROADCAST  */
     
     /*bind to device*/
+    /*Windows(cygwin) transport socket and tcp can't not bind*/
+#ifdef __CYGWIN__
+    if(!(config->socket_type == anubis_transport_socket &&
+         config->protocol == IPPROTO_TCP)) {
+#endif
     if(anubis_bind_to_device(sd, AF_INET,
                              config->device,
                              config->socket_type == anubis_transport_socket ? 0 : config->src_port) == -1) {
         close(sd);
         return -1;
     }//end if
+#ifdef __CYGWIN__
+    }
+#endif
     
 #ifdef SO_REUSEADDR
 	if ((config->socket_type != anubis_application_socket) &&

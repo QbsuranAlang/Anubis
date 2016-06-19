@@ -74,9 +74,18 @@ void anubis_list_devices(char *device) {
     for(d = alldevs; d ; d = d->next) {
         pcap_addr_t *a;
         char ntop_buf[INET6_ADDRSTRLEN];
-        
-        if(device && strcmp(device, d->name))
-            continue;
+	    char *tmp_device = NULL;
+	    
+#ifndef __CYGWIN__
+	    tmp_device = d->name;
+#else
+	    if (!(tmp_device = strstr(d->name, "{")))
+		    tmp_device = d->name;
+#endif
+	    
+	    if (device && strcmp(device, tmp_device))
+		    continue;
+	    
         if(device)
             found = 1;
         

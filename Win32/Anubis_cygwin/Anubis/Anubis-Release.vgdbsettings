@@ -87,7 +87,7 @@
     <LaunchGDBSettings xsi:type="GDBLaunchParametersNewInstance">
       <DebuggedProgram>$(TargetPath)</DebuggedProgram>
       <GDBServerPort>2000</GDBServerPort>
-      <ProgramArguments>-f HTTP_GET.json --verbose</ProgramArguments>
+      <ProgramArguments>-f RIPv1.json --verbose</ProgramArguments>
       <WorkingDirectory>$(ProjectDir)\Release</WorkingDirectory>
     </LaunchGDBSettings>
     <GenerateCtrlBreakInsteadOfCtrlC>true</GenerateCtrlBreakInsteadOfCtrlC>

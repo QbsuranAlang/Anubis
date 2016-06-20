@@ -7,7 +7,7 @@ Windows版本目前不穩定，大致上幾乎所有功能正常。
 ##Usage
 
 1. 安裝[Winpcap](Dependencies/WpdPack/WinPcap_4_1_3.exe)。
-2. 複製[目錄](Release/)內*.dll到C:\Windows內。
+2. 複製[cygwin1.dll](Release/cygwin1.dll)和[libnet.dll](Release/libnet.dll)到C:\Windows內。
 3. 執行[Anubis](Release/Anubis.exe)，需要Administrator權限。
 
 ##Bugs

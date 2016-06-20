@@ -34,15 +34,21 @@ echo -e "$rc" > uac.rc
 windres --input-format=rc -O coff -i uac.rc -o uac.res
 
 #comiple and sign
-gcc *.o -L /cygdrive/c/libnet-1.2-rc3/lib/ \
+g++ -o Anubis.exe -Wl,-gc-sections -static \
+ -L /cygdrive/c/libnet-1.2-rc3-vs2015/lib/ \
  -L /cygdrive/c/libdnet-1.11-win32/lib/ \
  -L /cygdrive/c/WpdPack/Lib/ \
- -lpacket -lwpcap -ldnet -ladvapi32 -lws2_32 \
- -liphlpapi -lnet.lib -lssl -lcrypto \
-  uac.res -o Anubis
+ -Wl,--start-group \
+ *.o \
+ -liphlpapi -ladvapi32 -lws2_32 \
+ -lpacket -lwpcap -ldnet -lnet.lib \
+ -lssl -lcrypto -lz \
+  uac.res \
+ -Wl,--end-group
+
+
 
 #clear file
-rm -f uac.manifest uac.rc
+rm -f uac.manifest uac.rc *.o
 
-exit
-rm -f *.o
+./Anubis.exe --version

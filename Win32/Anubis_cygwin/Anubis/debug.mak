@@ -13,9 +13,9 @@ OBJCOPY :=
 
 #Additional flags
 PREPROCESSOR_MACROS := DEBUG
-INCLUDE_DIRS := /cygdrive/C/WpdPack/Include /cygdrive/C/libnet-1.2-rc3/include_linux /cygdrive/C/libdnet-1.11-win32/include /cygdrive/C/Users/TU/Desktop/Anubis_cygwin/Anubis/include
-LIBRARY_DIRS := /cygdrive/C/WpdPack/Lib /cygdrive/C/libnet-1.2-rc3/lib /cygdrive/C/libdnet-1.11-win32/lib
-LIBRARY_NAMES := packet wpcap net.lib dnet ws2_32 iphlpapi ssl crypto advapi32
+INCLUDE_DIRS := /cygdrive/C/WpdPack/Include /cygdrive/C/libnet-1.2-rc3-vs2015/include_linux /cygdrive/C/libdnet-1.11-win32/include /cygdrive/C/Users/TU/Desktop/Anubis_cygwin/Anubis/include
+LIBRARY_DIRS := /cygdrive/C/WpdPack/Lib /cygdrive/C/libnet-1.2-rc3-vs2015/lib /cygdrive/C/libdnet-1.11-win32/lib
+LIBRARY_NAMES := packet wpcap net.lib dnet ws2_32 iphlpapi ssl crypto advapi32 z
 ADDITIONAL_LINKER_INPUTS := 
 MACOS_FRAMEWORKS := 
 LINUX_PACKAGES := 

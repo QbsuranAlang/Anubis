@@ -730,7 +730,7 @@
 
 // --- Include directories begin --- //
 ///cygdrive/C/WpdPack/Include
-///cygdrive/C/libnet-1.2-rc3/include_linux
+///cygdrive/C/libnet-1.2-rc3-vs2015/include_linux
 ///cygdrive/C/libdnet-1.11-win32/include
 ///cygdrive/C/Users/TU/Desktop/Anubis_cygwin/Anubis/include
 ///usr/lib/gcc/i686-pc-cygwin/5.4.0/include/c++

@@ -61,7 +61,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeIncludeSearchPath>C:\WpdPack\Include;C:\libnet-1.2-rc3\include_linux;C:\libdnet-1.11-win32\include;$(ProjectDir)\include;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\i686-pc-cygwin;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\backward;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include;C:\cygwin\usr\include;C:\cygwin\usr\include\w32api;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>C:\WpdPack\Include;C:\libnet-1.2-rc3-vs2015\include_linux;C:\libdnet-1.11-win32\include;$(ProjectDir)\include;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\i686-pc-cygwin;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\backward;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include;C:\cygwin\usr\include;C:\cygwin\usr\include\w32api;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>$(ProjectDir)\gcc_Debug.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
@@ -85,7 +85,7 @@
     <LibraryPath />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeIncludeSearchPath>C:\WpdPack\Include;C:\libnet-1.2-rc3\include_linux;C:\libdnet-1.11-win32\include;$(ProjectDir)\include;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\i686-pc-cygwin;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\backward;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include;C:\cygwin\usr\include;C:\cygwin\usr\include\w32api;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>C:\WpdPack\Include;C:\libnet-1.2-rc3-vs2015\include_linux;C:\libdnet-1.11-win32\include;$(ProjectDir)\include;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\i686-pc-cygwin;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include\c++\backward;C:\cygwin\lib\gcc\i686-pc-cygwin\5.4.0\include;C:\cygwin\usr\include;C:\cygwin\usr\include\w32api;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>$(ProjectDir)\gcc_Release.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>

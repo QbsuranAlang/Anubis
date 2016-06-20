@@ -28,6 +28,6 @@ LatestBuild
 
 # windows
 .deps
-.vc
+.vs
 *.o
 generator

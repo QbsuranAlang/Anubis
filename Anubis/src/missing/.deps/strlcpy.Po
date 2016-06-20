@@ -1,3 +1,0 @@
-missing/strlcpy.o: missing/strlcpy.c ../include/config.h
-
-../include/config.h:

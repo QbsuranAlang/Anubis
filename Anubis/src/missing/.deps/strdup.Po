@@ -1,3 +1,0 @@
-missing/strdup.o: missing/strdup.c ../include/config.h
-
-../include/config.h:

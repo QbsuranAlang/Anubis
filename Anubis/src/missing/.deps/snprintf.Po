@@ -1,3 +1,0 @@
-missing/snprintf.o: missing/snprintf.c ../include/config.h
-
-../include/config.h:

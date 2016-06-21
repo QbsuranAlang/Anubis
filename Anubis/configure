@@ -5395,7 +5395,7 @@ LIBS=$TOTAL_LIBS
 
 
 # output file
-ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/missing/Makefile"
+ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/missing/Makefile doc/Makefile doc/man/Makefile doc/man/man1/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -6129,6 +6129,9 @@ do
     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/missing/Makefile") CONFIG_FILES="$CONFIG_FILES src/missing/Makefile" ;;
+    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
+    "doc/man/Makefile") CONFIG_FILES="$CONFIG_FILES doc/man/Makefile" ;;
+    "doc/man/man1/Makefile") CONFIG_FILES="$CONFIG_FILES doc/man/man1/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

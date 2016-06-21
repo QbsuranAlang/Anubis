@@ -1,7 +1,7 @@
 
 include $(top_srcdir)/Makefile.am.common
 
-SUBDIRS = src include
+SUBDIRS = src include doc
 
 AUX_DIST = $(ac_aux_dir)/acinclude.m4  \
         $(ac_aux_dir)/config.guess  \

@@ -295,6 +295,9 @@ AC_CONFIG_FILES([
   include/Makefile
   src/Makefile
   src/missing/Makefile
+  doc/Makefile
+  doc/man/Makefile
+  doc/man/man1/Makefile
 ]) 
 
 AC_OUTPUT

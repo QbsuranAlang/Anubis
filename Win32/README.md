@@ -1,23 +1,45 @@
-#Anubis v1.1.2 (Windows)
+#Anubis (Windows)
 
 Windows版本目前不穩定，大致上幾乎所有功能正常。
 
 >懶得修改。
 
+</br>
+
+Windows version is in beta.
+
+> I am lazy.
+
 ##Usage
 
 1. 安裝[Winpcap](Dependencies/WpdPack/WinPcap_4_1_3.exe)。
-2. 複製[cygwin1.dll](Release/cygwin1.dll)和[libnet.dll](Release/libnet.dll)到C:\Windows內。
+2. 複製[cygwin1.dll](Release/cygwin1.dll)和[libnet.dll](Release/libnet.dll)到```C:\Windows```內。
 3. 執行[Anubis](Release/Anubis.exe)，需要Administrator權限。
 
+</br>
+
+1. Install [Winpcap](Dependencies/WpdPack/WinPcap_4_1_3.exe).
+2. Copy [cygwin1.dll](Release/cygwin1.dll) and [libnet.dll](Release/libnet.dll) to ```C:\Windows```.
+3. Execute [Anubis](Release/Anubis.exe) with administrator permission.
+
 ##Bugs
-1. Application Socket的UDP無法廣播。
+1. ```"Application Socket"```的UDP無法廣播。
 2. Transport Socket的TCP無法使用。
 3. Receive packet option中的Timeout似乎無法使用。
+
+</br>
+
+1. UDP of ```"Application Socket"``` can't broadcast.
+2. TCP of Transport Socke is not available.
+3. Timeout of receive packet option is not available.
 
 ###Bug 1
 
 似乎在大多數Windows 7以上系統皆無法使用。
+
+</br>
+
+Seem not available on most Windows 7.
 
 > [See here 1](http://stackoverflow.com/questions/4615275/udp-broadcast-in-windows-7-does-it-work)
 
@@ -26,6 +48,10 @@ Windows版本目前不穩定，大致上幾乎所有功能正常。
 ###Bug 2 (Limitations on Raw Sockets)
 
 Windows對於Raw socket有一些限制，Bugs的第二點就是因為此限制所以無法使用。
+
+</br>
+
+Windows limit raw socket. Reason of bugs 2.
 
 ```
 Limitations on Raw Sockets

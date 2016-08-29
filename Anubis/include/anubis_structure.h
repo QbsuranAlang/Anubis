@@ -2,7 +2,7 @@
 //  anubis_structure.h
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/3/31.
+//  Created by TUTU on 2016/3/31.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -287,6 +287,30 @@ typedef struct {
     char *output_filename;
 } anubis_packet_t;
 
+/*Model base structure*/
+typedef struct {
+    char *model_name;
+    char *device;
+    char *comment;
+    int infinite_loop;
+    u_int32_t interval;
+    u_int32_t amount;
+    int dump_send;
+    char *save_config;
+    char *filter;
+    u_int32_t recv_timeout;
+    int dump_recv;
+    struct timeval *send_time;
+    
+    pcap_t *pcap_handle;
+} anubis_model_t;
+
+/*Model callback structure*/
+typedef struct {
+    int (*callback)(const u_char *, struct timeval *);
+    const u_char *data;
+} anubis_model_callback_t;
+
 /*socket config structure*/
 typedef struct {
     char *device;
@@ -322,6 +346,9 @@ typedef struct {
     
     anubis_packet_t *packets;
     int packets_count;
+    
+    /*For model*/
+    anubis_model_callback_t *callback;
 } anubis_t;
 
 #endif /* anubis_structure_h */

@@ -2,7 +2,7 @@
 //  anubis_dumper.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/4/2.
+//  Created by TUTU on 2016/4/2.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -30,7 +30,6 @@ static void anubis_dump_icmp(u_int32_t *dump_length, u_int32_t total_length, anu
 static void anubis_dump_arp(u_int32_t *dump_length, u_int32_t total_length, const u_int8_t *content);
 static void anubis_dump_payload(u_int32_t length, u_int32_t total_length, const u_int8_t *content);
 static void anubis_dump_tcp_mini(u_int32_t *dump_length, u_int32_t total_length, struct libnet_tcp_hdr *tcp);
-static void anubis_dump_ethernet(u_int32_t *dump_length, u_int32_t total_length, const u_int8_t *content);
 
 static void anubis_dump_payload(u_int32_t dump_length, u_int32_t total_length, const u_int8_t *content) {
     
@@ -361,7 +360,7 @@ static void anubis_dump_wol(u_int32_t *dump_length, u_int32_t total_length, anub
     
 }//end anubis_dump_wol
 
-static void anubis_dump_ethernet(u_int32_t *dump_length, u_int32_t total_length, const u_int8_t *content) {
+void anubis_dump_ethernet(u_int32_t *dump_length, u_int32_t total_length, const u_int8_t *content) {
     struct libnet_ethernet_hdr *ethernet = (struct libnet_ethernet_hdr *)content;
     char dst_mac_addr[MAC_ADDRSTRLEN] = {0};
     char src_mac_addr[MAC_ADDRSTRLEN] = {0};

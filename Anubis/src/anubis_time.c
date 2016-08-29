@@ -2,7 +2,7 @@
 //  anubis_time.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/4/1.
+//  Created by TUTU on 2016/4/1.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -67,13 +67,18 @@ char *anubis_current_time_format(void) {
     */
     time_t local_tv_sec = tv.tv_sec;
     tm_info = localtime(&local_tv_sec);
-    strftime(time_buffer[which], sizeof(time_buffer[which]), "%H:%M:%S", tm_info);
+    strftime(time_buffer[which], sizeof(time_buffer[which]), "%H:%M:%S:", tm_info);
     
     memset(temp, 0, sizeof(temp));
     strlcpy(temp, time_buffer[which], sizeof(temp));
     memset(time_buffer[which], 0, sizeof(time_buffer[which]));
     
-    snprintf(time_buffer[which], sizeof(time_buffer[which]), "%s.%03d", temp, (int)(tv.tv_usec/1000.));
-    
+    snprintf(time_buffer[which], sizeof(time_buffer[which]), "%s%03d", temp, (int)(tv.tv_usec/1000) );
     return time_buffer[which];
-}
+}//end anubis_current_time_format
+
+long anubis_subtract_time(struct timeval from, struct timeval to) {
+    long microseconds = labs((to.tv_sec - from.tv_sec) * 1000000 + ((long)to.tv_usec - (long)from.tv_usec));
+
+    return microseconds;
+}//end anubis_subtract_time

@@ -2,7 +2,7 @@
 //  anubis_stream.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/3/30.
+//  Created by TUTU on 2016/3/30.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -88,99 +88,30 @@ void anubis_in_stream(FILE *in_fp, char *out_buffer, int out_length) {
     }//end while
     
     rewind(in_fp);
-    /*
-    tmp = out_buffer;
-    while((tmp = strchr(out_buffer, '\\'))) {
-        signed char c = 0;
-        switch (*(tmp + 1)) {
-            case 'a': c = '\a'; break;
-            case 'b': c = '\b'; break;
-            case 'f': c = '\f'; break;
-            case 'n': c = '\n'; break;
-            case 'r': c = '\r'; break;
-            case 't': c = '\t'; break;
-            case 'v': c = '\v'; break;
-            default: break;
-        }//end switch
-        if(c == 0)
-            continue;
-        
-        printf("%s\n", out_buffer);
-        *tmp = c;
-        long move_length = out_buffer + strlen(out_buffer) - tmp - 2;
-        if(move_length > 0) {
-            memmove(tmp + 1, tmp + 2, move_length);
-        }//end if
-        out_buffer[strlen(out_buffer) - 1] = 0; //last character
-        tmp += strlen(out_buffer) - move_length;
-    }//end while
-    rewind(in_fp);
-     */
 }//end anubis_in_stream
 
 void anubis_in(char *out_buffer, int out_length) {
     
     anubis_in_stream(in_stream, out_buffer, out_length);
-    /*
-    char buffer[1024] = {};
-    while(!feof(in_stream)) {
-     
-        anubis_out("> ");
-        if(!fgets(buffer, sizeof(buffer), in_stream)) {
-            if(errno)
-                anubis_perror("fgets()");
-            continue;
-        }//end if
-        
-        //truncate newline
-        if((tmp = strchr(buffer, '\n'))) {
-            *tmp = 0;
-        }//end if
-        if((tmp = strchr(buffer, '\r'))) {
-            *tmp = 0;
-        }//end if
-        
-        //escape sequences
-        while((tmp = strchr(buffer, '\\'))) {
-            signed char c = 0;
-            do {
-                switch (*(tmp + 1)) {
-                    case 'a': c = '\a'; break;
-                    case 'b': c = '\b'; break;
-                    case 'f': c = '\f'; break;
-                    case 'n': c = '\n'; break;
-                    case 'r': c = '\r'; break;
-                    case 't': c = '\t'; break;
-                    case 'v': c = '\v'; break;
-                    default:
-                        break;
-                }//end switch
-                if(c == 0)
-                    break; //like goto
-                
-                *tmp = c;
-                long move_length = buffer + strlen(buffer) - tmp - 2;
-                if(move_length > 0) {
-                    memmove(tmp + 1, tmp + 2, move_length);
-                }//end if
-                buffer[strlen(buffer) - 1] = 0;
-            }//end do
-            while(0);
-        }//end if
-        
-        //read as much as can read
-        snprintf(out_buffer, out_length, "%s%s", out_buffer, buffer);
-        offset += strlen(buffer);
-        if(offset + 1 >= out_length)
-            break; //out of bound
-        
-        memset(buffer, 0, sizeof(buffer));
-    }//end while
-    rewind(in_stream); //flush in stream
-    */
-    
     fprintf(out_stream, "\n");
 }//end anubis_in
+
+FILE *anubis_null_stream(void) {
+    FILE *null_stream;
+    
+    null_stream = fopen("/dev/null", "w");
+    /*
+#ifndef __CYGWIN__
+    null_stream = fopen("/dev/null", "w");
+#else
+    null_stream = fopen("nul", "w");
+#endif
+    */
+    if(!null_stream)
+        anubis_perror("fopen()");
+    
+    return null_stream;
+}//end anubis_anubis_null_stream
 
 void anubis_err(const char *fmt, ...) {
     va_list ap;

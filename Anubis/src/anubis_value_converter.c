@@ -2,7 +2,7 @@
 //  anubis_value_converter.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/3/31.
+//  Created by TUTU on 2016/3/31.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -236,9 +236,13 @@ const char *anubis_ip_ntoa(in_addr_t i) {
     which = (which + 1 == ANUBIS_BUFFER_SIZE ? 0 : which + 1);
     
     memset(buffer[which], 0, sizeof(buffer[which]));
-    inet_ntop(AF_INET, &i, buffer[which], sizeof(buffer[which]));
-    
-    return buffer[which];
+    if(inet_ntop(AF_INET, &i, buffer[which], sizeof(buffer[which]))) {
+        return buffer[which];
+    }//end if
+    else {
+        anubis_perror("inet_ntop()");
+        return NULL;
+    }//end else
 }//end anubis_ip_ntoa
 
 in_addr_t anubis_hostname_to_ip_address(const char *hostname) {
@@ -354,13 +358,12 @@ const SSL_METHOD *anubis_string_to_SSL_METOHD(const char *method, int role) {
 
 #pragma mark parse function
 
-static char *anubis_parse_param(char *prefix, char *expression) {
+static char *anubis_parse_param(const char *prefix, const char *expression) {
     
     anubis_verbose("Calling \"%s\"\n", expression);
     
     //get param
-    expression += strlen(prefix) + 1;
-    *(expression + strlen(expression) - 1) = 0;
+    expression += strlen(prefix) + 1; //remain: xxxx)
     
     static char buffer[ANUBIS_BUFFER_SIZE][ANUBIS_BUFFER_SIZE] = {0};
     static int which = -1;
@@ -372,6 +375,7 @@ static char *anubis_parse_param(char *prefix, char *expression) {
         anubis_perror("strdup()");
         return NULL;
     }//end if
+    *(tmp + strlen(tmp) - 1) = 0; //last character: ')'
     
     if(strlen(tmp) > ANUBIS_BUFFER_SIZE - 1) {
         anubis_err("%s(): \"%s\" should be less %d\n", prefix, tmp, ANUBIS_BUFFER_SIZE);
@@ -385,7 +389,7 @@ static char *anubis_parse_param(char *prefix, char *expression) {
     return buffer[which];
 }//end anubis_parse_param
 
-u_int32_t anubis_random(char *expression) {
+u_int32_t anubis_random(const char *expression) {
 #define RANDOM_RANGE(low, high) \
 ((u_int32_t)(random() % ((high)-(low)+(1)))+(low))
     
@@ -442,7 +446,7 @@ u_int32_t anubis_random(char *expression) {
     }//end if
 }//end anubis_random
 
-in_addr_t anubis_random_ip_address(char *expression) {
+in_addr_t anubis_random_ip_address(const char *expression) {
     //get param
     
     anubis_srand();
@@ -468,7 +472,7 @@ in_addr_t anubis_random_ip_address(char *expression) {
     }//end if
 }//end anubis_random_ip_address
 
-u_int8_t *anubis_random_mac_address(char *expression) {
+u_int8_t *anubis_random_mac_address(const char *expression) {
     //get param
     
     anubis_srand();
@@ -492,12 +496,12 @@ u_int8_t *anubis_random_mac_address(char *expression) {
     }//end if
 }//end anubis_random_mac_address
 
-u_int8_t *anubis_lookup_mac_address(char *expression, const char *device) {
+u_int8_t *anubis_lookup_mac_address(const char *expression, const char *device) {
     //get param
-    char *buffer = anubis_parse_param("random_mac_address", expression);
+    
+    char *buffer = anubis_parse_param("lookup_mac_address", expression);
     if(!buffer)
         return NULL;
-    
     if(!strcasecmp(buffer, "255.255.255.255") || !strcasecmp(buffer, "Broadcast")) {
         return (u_int8_t *)"\xff\xff\xff\xff\xff\xff";
     }//end if
@@ -527,54 +531,55 @@ u_int8_t *anubis_lookup_mac_address(char *expression, const char *device) {
         if(arp_get(handle, &arp_entry) == 0) {
             char *mac_address = addr_ntoa(&arp_entry.arp_ha);
             arp_close(handle);
+            if(arping) {
+                anubis_verbose("Found \"%s\" at \"%s\"\n", buffer, mac_address);
+            }//end if found
             return anubis_mac_aton(mac_address);
         }//end if
         else {
             if(arping) {
                 anubis_err("lookup_mac_address(): \"%s\" is not found\n", buffer);
                 arp_close(handle);
-                return (u_int8_t *)"\x00\x00\x00\x00\x00\x00";
+                return NULL;
             }//end if
             else {
                 //try to arping
                 anubis_verbose("MAC address of \"%s\" is not found in the ARP cache, trying to arping \"%s\"\n", buffer, buffer);
                 pid_t pid = fork();
                 if(pid == 0) {
-                    FILE *fp = NULL;
-                    char tmp_filename[ANUBIS_BUFFER_SIZE] = {0};
-                    char commands[ANUBIS_BUFFER_SIZE * 2] = {0};
-                    char current_path[ANUBIS_BUFFER_SIZE] = {0};
-                    //get current
-                    memset(current_path, 0, sizeof(current_path));
-                    getcwd(current_path, sizeof(current_path));
+                    FILE *temp_out_stream = out_stream;
+                    FILE *temp_err_stream = err_stream;
+                    int out_fail = 0;
+                    int err_fail = 0;
                     
-                    snprintf(tmp_filename, sizeof(tmp_filename), "%s/anubis_tmpfile%ld", current_path, time(NULL));
+                    out_stream = anubis_null_stream();
+                    err_stream = anubis_null_stream();
                     
-                    //temp file exsit and delete it
-                    struct stat filestatus = {0};
-                    if (stat(tmp_filename, &filestatus) == 0) {
-						remove(tmp_filename);
+                    if(!out_stream) {
+                        out_stream = temp_out_stream;
+                        out_fail = 1;
+                    }//end if
+                    if(!err_stream) {
+                        err_stream = temp_err_stream;
+                        err_fail = 1;
                     }//end if
                     
-                    fp = fopen(tmp_filename, "wt+");
-                    if(!fp) {
-                        anubis_perror("fopen()");
-                        exit(1); //bye fork
-                    }//end if
-                    
-                    fprintf(fp, "[{\"Socket-type\": \"Data-link\",\"Option\": {\"Device\": \"%s\"},\"Sequence\": [{\"Send Packet\": [{\"Ethernet\": {\"Destination MAC Address\": \"Broadcast\",\"Source MAC Address\": \"Myself\",\"Type\": \"ARP\"}},{\"ARP\": {\"Operation\": \"Request\",\"Sender Hardware Address\": \"myself\",\"Sender Protocol Address\": \"myself\",\"Target Hardware Address\": \"00:00:00:00:00:00\",\"Target Protocol Address\": \"%s\"}}]}]}]", device, buffer);
-                    fflush(fp);
-                    fclose(fp);
-                    
-                    snprintf(commands, sizeof(commands), "%s/anubis -f %s > /dev/null 2>&1", current_path, tmp_filename);
-                    
-                    //try three time
-                    anubis_verbose("Arping \"%s\" for three times\n", buffer);
+                    //arping 3 three times
                     for(int i = 0 ; i < 3 ; i++)
-                        system(commands);
-                    
-					remove(tmp_filename);
+                        anubis_arping(device, buffer);
                     anubis_wait_microsecond(800000); //wait 800 ms
+                    
+                    //restore
+                    if(!out_fail) {
+                        fclose(out_stream);
+                        out_stream = temp_out_stream;
+                    }//end if
+                    if(!err_fail) {
+                        fclose(err_stream);
+                        err_stream = temp_err_stream;
+                    }//end if
+                    
+                    exit(0);
                 }//end if
                 else if(pid < 0) {
                     anubis_perror("fork()");
@@ -594,7 +599,7 @@ u_int8_t *anubis_lookup_mac_address(char *expression, const char *device) {
 }//end anubis_lookup_mac_address
 
 //libdnet callback
-static int arp_lookup_ip_address(const struct arp_entry *arp_entry, void *arg) {
+static int arp_lookup_ip_address_callback(const struct arp_entry *arp_entry, void *arg) {
     struct arp_entry *addr = (struct arp_entry *)arg;
     
     if(!addr_cmp(&addr->arp_ha, &arp_entry->arp_ha)) {
@@ -602,11 +607,11 @@ static int arp_lookup_ip_address(const struct arp_entry *arp_entry, void *arg) {
         return 1;
     }//end if found
     return 0;
-}
+}//end arp_lookup_ip_address_callback
 
-in_addr_t anubis_lookup_ip_address(char *expression) {
+in_addr_t anubis_lookup_ip_address(const char *expression) {
     //get param
-    char *buffer = anubis_parse_param("random_ip_address", expression);
+    char *buffer = anubis_parse_param("lookup_ip_address", expression);
     if(!buffer)
         return 0;
     
@@ -622,7 +627,7 @@ in_addr_t anubis_lookup_ip_address(char *expression) {
         }//end if
         
         addr_pton(buffer, &arp_entry.arp_ha);
-        int ret = arp_loop(handle, arp_lookup_ip_address, (void *)&arp_entry);
+        int ret = arp_loop(handle, arp_lookup_ip_address_callback, (void *)&arp_entry);
         if(ret == 1) {
             char *ip_address = addr_ntoa(&arp_entry.arp_pa);
             arp_close(handle);
@@ -636,7 +641,7 @@ in_addr_t anubis_lookup_ip_address(char *expression) {
     }//end else
 }//end anubis_lookup_ip_address
 
-in_addr_t anubis_multicast_address(char *expression) {
+in_addr_t anubis_multicast_address(const char *expression) {
     
     char *buffer = anubis_parse_param("multicast_address", expression);
     if(!buffer)
@@ -654,14 +659,14 @@ in_addr_t anubis_multicast_address(char *expression) {
     return 0;
 }//end anubis_multicast_address
 
-u_int16_t anubis_port(char *expression) {
+u_int16_t anubis_port(const char *expression) {
     char *buffer = anubis_parse_param("port", expression);
     if(!buffer)
         return 0;
     
 #define PORT(x, y) \
-if(!strcasecmp(buffer, x)) \
-return y;
+    if(!strcasecmp(buffer, x)) \
+        return y;
     
     PORT("HTTP", 80);
     PORT("HTTPS", 443);

@@ -279,7 +279,7 @@ case "$withval" in
 )
 
 # Set flags
-TOTAL_CFLAGS="$CFLAGS -std=c99 -D _GNU_SOURCE -include config.h $LIBPCAP_CFLAGS $LIBNET_CFLAGS $DNET_CFLAGS $SSL_CFLAGS $CRYPTO_CFLAGS"
+TOTAL_CFLAGS="$CFLAGS -std=c99 -D _GNU_SOURCE -include config.h $LIBPCAP_CFLAGS $LIBNET_CFLAGS $DNET_CFLAGS $SSL_CFLAGS $CRYPTO_CFLAGS -I ./model"
 
 TOTAL_LDFLAGS="$LDFLAGS $LIBPCAP_LDFLAGS $LIBNET_LDFLAGS $DNET_LDFLAGS $SSL_LDFLAGS $CRYPTO_LDFLAGS"
 
@@ -293,8 +293,12 @@ AC_SUBST(LIBS, $[TOTAL_LIBS])
 AC_CONFIG_FILES([ 
   Makefile
   include/Makefile
+  include/model/Makefile
   src/Makefile
   src/missing/Makefile
+  src/parser/Makefile
+  src/writer/Makefile
+  src/model/Makefile
   doc/Makefile
   doc/man/Makefile
   doc/man/man1/Makefile

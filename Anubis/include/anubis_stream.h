@@ -2,7 +2,7 @@
 //  anubis_stream.h
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/3/30.
+//  Created by TUTU on 2016/3/30.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -28,6 +28,8 @@ void anubis_perror(char *s);
 void anubis_ssl_perror(char *s);
 void anubis_in(char *out_buffer, int out_length);
 void anubis_in_stream(FILE *in_fp, char *out_buffer, int out_length);
+FILE *anubis_null_stream(void);
+
 #ifndef __CYGWIN__
 void anubis_err(const char *fmt, ...) __attribute__((format (__printf__, 1, 2)));
 void anubis_out(const char *fmt, ...) __attribute__((format (__printf__, 1, 2)));

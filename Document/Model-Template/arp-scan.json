@@ -1,0 +1,16 @@
+{
+    "Option": {
+        "Model": "arp-scan",
+        "_comment": "arp-scan to targets",
+        //"Save configuration to file": "./arp-scan_auto.json",
+        "Device": "en0",
+        "Interval": 1000000, /*10^-6, 1000000 microsecond, 1s*/
+        "Dump send packet": "disable",
+        "Receive Timeout": 1000, /*10^-3, 1000 millisecond, 1s*/
+        "Dump receive packet": "disable"
+    },
+
+    "Model": {
+        "Targets": ["192.168.1.0/24", "192.168.1.25-192.168.1.50"]
+    }
+}

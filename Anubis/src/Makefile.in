@@ -103,13 +103,29 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_anubis_OBJECTS = missing/snprintf.$(OBJEXT) \
 	missing/strdup.$(OBJEXT) missing/strlcat.$(OBJEXT) \
 	missing/strlcpy.$(OBJEXT) missing/strcasecmp.$(OBJEXT) \
-	json.$(OBJEXT) anubis_defaults.$(OBJEXT) \
-	anubis_parse_headers.$(OBJEXT) anubis_parser.$(OBJEXT) \
+	parser/anubis_parse_icmp.$(OBJEXT) \
+	parser/anubis_parse_rip.$(OBJEXT) \
+	parser/anubis_parse_wol.$(OBJEXT) \
+	parser/anubis_parse_arp.$(OBJEXT) \
+	parser/anubis_parse_ipv4.$(OBJEXT) \
+	parser/anubis_parse_socket.$(OBJEXT) \
+	parser/anubis_parse_dhcpv4.$(OBJEXT) \
+	parser/anubis_parse_message.$(OBJEXT) \
+	parser/anubis_parse_tcp.$(OBJEXT) \
+	parser/anubis_parse_ethernet.$(OBJEXT) \
+	parser/anubis_parse_other.$(OBJEXT) \
+	parser/anubis_parse_udp.$(OBJEXT) \
+	writer/anubis_write_data_link_or_network.$(OBJEXT) \
+	writer/anubis_write_transport.$(OBJEXT) \
+	writer/anubis_write_application.$(OBJEXT) \
+	model/anubis_model_arping.$(OBJEXT) \
+	model/anubis_model_arpoison.$(OBJEXT) json.$(OBJEXT) \
+	anubis_defaults.$(OBJEXT) anubis_parser.$(OBJEXT) \
 	anubis_stream.$(OBJEXT) anubis_time.$(OBJEXT) \
 	anubis_value_converter.$(OBJEXT) anubis_writer.$(OBJEXT) \
 	anubis_dumper.$(OBJEXT) anubis_libnet_extension.$(OBJEXT) \
 	anubis_value_checker.$(OBJEXT) anubis_extra.$(OBJEXT) \
-	anubis.$(OBJEXT)
+	anubis_model.$(OBJEXT) anubis.$(OBJEXT)
 anubis_OBJECTS = $(am_anubis_OBJECTS)
 anubis_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -299,16 +315,32 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign 
-AM_CPPFLAGS = -I$(top_srcdir)/include
-SUBDIRS = missing
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/include/model
+SUBDIRS = missing parser writer model
 anubis_SOURCES = missing/snprintf.c \
                 missing/strdup.c \
                 missing/strlcat.c \
                 missing/strlcpy.c \
                 missing/strcasecmp.c \
+                parser/anubis_parse_icmp.c \
+                parser/anubis_parse_rip.c \
+                parser/anubis_parse_wol.c \
+                parser/anubis_parse_arp.c \
+                parser/anubis_parse_ipv4.c \
+                parser/anubis_parse_socket.c \
+                parser/anubis_parse_dhcpv4.c \
+                parser/anubis_parse_message.c \
+                parser/anubis_parse_tcp.c \
+                parser/anubis_parse_ethernet.c \
+                parser/anubis_parse_other.c \
+                parser/anubis_parse_udp.c \
+                writer/anubis_write_data_link_or_network.c \
+                writer/anubis_write_transport.c \
+                writer/anubis_write_application.c \
+                model/anubis_model_arping.c \
+                model/anubis_model_arpoison.c \
                 json.c \
                 anubis_defaults.c \
-                anubis_parse_headers.c \
                 anubis_parser.c \
                 anubis_stream.c \
                 anubis_time.c \
@@ -318,6 +350,7 @@ anubis_SOURCES = missing/snprintf.c \
                 anubis_libnet_extension.c \
                 anubis_value_checker.c \
                 anubis_extra.c \
+                anubis_model.c \
                 anubis.c 
 
 all: all-recursive
@@ -412,6 +445,58 @@ missing/strlcpy.$(OBJEXT): missing/$(am__dirstamp) \
 	missing/$(DEPDIR)/$(am__dirstamp)
 missing/strcasecmp.$(OBJEXT): missing/$(am__dirstamp) \
 	missing/$(DEPDIR)/$(am__dirstamp)
+parser/$(am__dirstamp):
+	@$(MKDIR_P) parser
+	@: > parser/$(am__dirstamp)
+parser/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) parser/$(DEPDIR)
+	@: > parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_icmp.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_rip.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_wol.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_arp.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_ipv4.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_socket.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_dhcpv4.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_message.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_tcp.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_ethernet.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_other.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+parser/anubis_parse_udp.$(OBJEXT): parser/$(am__dirstamp) \
+	parser/$(DEPDIR)/$(am__dirstamp)
+writer/$(am__dirstamp):
+	@$(MKDIR_P) writer
+	@: > writer/$(am__dirstamp)
+writer/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) writer/$(DEPDIR)
+	@: > writer/$(DEPDIR)/$(am__dirstamp)
+writer/anubis_write_data_link_or_network.$(OBJEXT):  \
+	writer/$(am__dirstamp) writer/$(DEPDIR)/$(am__dirstamp)
+writer/anubis_write_transport.$(OBJEXT): writer/$(am__dirstamp) \
+	writer/$(DEPDIR)/$(am__dirstamp)
+writer/anubis_write_application.$(OBJEXT): writer/$(am__dirstamp) \
+	writer/$(DEPDIR)/$(am__dirstamp)
+model/$(am__dirstamp):
+	@$(MKDIR_P) model
+	@: > model/$(am__dirstamp)
+model/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) model/$(DEPDIR)
+	@: > model/$(DEPDIR)/$(am__dirstamp)
+model/anubis_model_arping.$(OBJEXT): model/$(am__dirstamp) \
+	model/$(DEPDIR)/$(am__dirstamp)
+model/anubis_model_arpoison.$(OBJEXT): model/$(am__dirstamp) \
+	model/$(DEPDIR)/$(am__dirstamp)
 
 anubis$(EXEEXT): $(anubis_OBJECTS) $(anubis_DEPENDENCIES) $(EXTRA_anubis_DEPENDENCIES) 
 	@rm -f anubis$(EXEEXT)
@@ -420,6 +505,9 @@ anubis$(EXEEXT): $(anubis_OBJECTS) $(anubis_DEPENDENCIES) $(EXTRA_anubis_DEPENDE
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f missing/*.$(OBJEXT)
+	-rm -f model/*.$(OBJEXT)
+	-rm -f parser/*.$(OBJEXT)
+	-rm -f writer/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -429,7 +517,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_dumper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_extra.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_libnet_extension.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_parse_headers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_model.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_parser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_stream.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/anubis_time.Po@am__quote@
@@ -442,6 +530,23 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@missing/$(DEPDIR)/strdup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@missing/$(DEPDIR)/strlcat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@missing/$(DEPDIR)/strlcpy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@model/$(DEPDIR)/anubis_model_arping.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@model/$(DEPDIR)/anubis_model_arpoison.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_arp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_dhcpv4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_ethernet.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_icmp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_ipv4.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_message.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_other.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_rip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_socket.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_tcp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_udp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@parser/$(DEPDIR)/anubis_parse_wol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@writer/$(DEPDIR)/anubis_write_application.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@writer/$(DEPDIR)/anubis_write_data_link_or_network.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@writer/$(DEPDIR)/anubis_write_transport.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -649,6 +754,12 @@ distclean-generic:
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
 	-rm -f missing/$(DEPDIR)/$(am__dirstamp)
 	-rm -f missing/$(am__dirstamp)
+	-rm -f model/$(DEPDIR)/$(am__dirstamp)
+	-rm -f model/$(am__dirstamp)
+	-rm -f parser/$(DEPDIR)/$(am__dirstamp)
+	-rm -f parser/$(am__dirstamp)
+	-rm -f writer/$(DEPDIR)/$(am__dirstamp)
+	-rm -f writer/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -658,7 +769,7 @@ clean: clean-recursive
 clean-am: clean-generic clean-sbinPROGRAMS mostlyclean-am
 
 distclean: distclean-recursive
-	-rm -rf ./$(DEPDIR) missing/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) missing/$(DEPDIR) model/$(DEPDIR) parser/$(DEPDIR) writer/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -704,7 +815,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-	-rm -rf ./$(DEPDIR) missing/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) missing/$(DEPDIR) model/$(DEPDIR) parser/$(DEPDIR) writer/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

@@ -2,7 +2,7 @@
 //  anubis_extra.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/4/12.
+//  Created by TUTU on 2016/4/12.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -65,11 +65,18 @@ void anubis_list_devices(char *device) {
     pcap_if_t *d;
 	char errbuf[PCAP_ERRBUF_SIZE] = {0};
     int found = 0;
+    char *default_device = NULL;
     
     if (pcap_findalldevs(&alldevs, errbuf) == -1) {
         anubis_err("%s\n", errbuf);
         return;
     }
+    
+    //get default device
+    anubis_verbose("Getting default device...\n");
+    default_device = anubis_default_device();
+    if(!default_device)
+        anubis_verbose("Can\'t get default device, but it\'s OK\n");
     
     for(d = alldevs; d ; d = d->next) {
         pcap_addr_t *a;
@@ -89,15 +96,12 @@ void anubis_list_devices(char *device) {
         if(device)
             found = 1;
         
-#ifdef __CYGWIN__
-	    char *name = d->name;
-	    char *tmp = NULL;
-	    if (!(tmp = strstr(name, "{")))
-		    tmp = name;
-	    anubis_out("Name: %s%s\n", tmp, (d->flags & PCAP_IF_LOOPBACK) ? " [Loopback]" : "");
-#else
-	    anubis_out("Name: %s%s\n", d->name, (d->flags & PCAP_IF_LOOPBACK) ? " [Loopback]" : "");
-#endif
+        if(default_device && !strcmp(default_device, tmp_device)) {
+            anubis_out("Name: %s%s [Default]\n", tmp_device, (d->flags & PCAP_IF_LOOPBACK) ? " [Loopback]" : "");
+        }//end if
+        else {
+            anubis_out("Name: %s%s\n", tmp_device, (d->flags & PCAP_IF_LOOPBACK) ? " [Loopback]" : "");
+        }//end else
         
         if (d->description)
             anubis_out("\tDescription: %s\n",d->description);

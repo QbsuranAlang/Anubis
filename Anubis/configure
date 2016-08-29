@@ -5381,7 +5381,7 @@ fi
 
 
 # Set flags
-TOTAL_CFLAGS="$CFLAGS -std=c99 -D _GNU_SOURCE -include config.h $LIBPCAP_CFLAGS $LIBNET_CFLAGS $DNET_CFLAGS $SSL_CFLAGS $CRYPTO_CFLAGS"
+TOTAL_CFLAGS="$CFLAGS -std=c99 -D _GNU_SOURCE -include config.h $LIBPCAP_CFLAGS $LIBNET_CFLAGS $DNET_CFLAGS $SSL_CFLAGS $CRYPTO_CFLAGS -I ./model"
 
 TOTAL_LDFLAGS="$LDFLAGS $LIBPCAP_LDFLAGS $LIBNET_LDFLAGS $DNET_LDFLAGS $SSL_LDFLAGS $CRYPTO_LDFLAGS"
 
@@ -5395,7 +5395,7 @@ LIBS=$TOTAL_LIBS
 
 
 # output file
-ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/missing/Makefile doc/Makefile doc/man/Makefile doc/man/man1/Makefile"
+ac_config_files="$ac_config_files Makefile include/Makefile include/model/Makefile src/Makefile src/missing/Makefile src/parser/Makefile src/writer/Makefile src/model/Makefile doc/Makefile doc/man/Makefile doc/man/man1/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -6127,8 +6127,12 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
+    "include/model/Makefile") CONFIG_FILES="$CONFIG_FILES include/model/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/missing/Makefile") CONFIG_FILES="$CONFIG_FILES src/missing/Makefile" ;;
+    "src/parser/Makefile") CONFIG_FILES="$CONFIG_FILES src/parser/Makefile" ;;
+    "src/writer/Makefile") CONFIG_FILES="$CONFIG_FILES src/writer/Makefile" ;;
+    "src/model/Makefile") CONFIG_FILES="$CONFIG_FILES src/model/Makefile" ;;
     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
     "doc/man/Makefile") CONFIG_FILES="$CONFIG_FILES doc/man/Makefile" ;;
     "doc/man/man1/Makefile") CONFIG_FILES="$CONFIG_FILES doc/man/man1/Makefile" ;;

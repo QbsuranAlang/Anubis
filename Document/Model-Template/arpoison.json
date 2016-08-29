@@ -1,0 +1,22 @@
+{
+    "Option": {
+        "Model": "arpoison",
+        "_comment": "arpoison to hosts and reversed to router",
+        //"Save configuration to file": "./arpoison_auto.json",
+        "Amount": 0,
+        "Dump send packet": "disable",
+        "Device": "en0",
+        "Interval": 3000000, /*3s*/
+        "Infinite loop": "enable"
+    },
+
+    "Model": {
+        "Hosts": ["192.168.1.0/25", "192.168.1.200-192.168.1.250", "192.168.1.253"],
+        "Reversed": "Default-route",
+        "Interval": 10000, /*0.01s*/
+        "White": ["Myself"], /*Skip myself*/
+        "Operation": "ARPOP_REQUEST", /*More effective*/
+        "Sender Hardware Address": "Myself" /*Default*/
+        //"Sender Hardware Address": "random_mac_address()" /*Cut the targets*/
+    }
+}

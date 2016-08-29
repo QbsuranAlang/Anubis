@@ -2,7 +2,7 @@
 //  anubis_time.h
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/4/1.
+//  Created by TUTU on 2016/4/1.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -26,5 +26,6 @@
 
 void anubis_srand(void);
 char *anubis_current_time_format(void);
+long anubis_subtract_time(struct timeval from, struct timeval to);
 
 #endif /* anubis_time_h */

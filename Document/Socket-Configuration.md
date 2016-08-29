@@ -70,7 +70,7 @@ Socket configuration and examples.
 * ```字串類型(string)```：可用```"\uxxxx"```表示unicode，其他逸出自元(escape character)跟JSON相同。
 * ```布林類型(boolean)```：可用```"enable"```、```"disable"```、```0```、```1```、0以及1。
 * ```二進位類型(binary)```：只能用0或1，有長度限制。
-* ```地址類型(address)```：可以使用```"Myself"```，表示自己的地址訊息，會根據```"Device"```參數取得地址；```"Broadcast"```則會填入廣播號碼，另外如果是IP地址還可以使用主機名稱代替。
+* ```地址類型(address)```：可以使用```"Myself"```，表示自己的地址訊息，會根據```"Device"```參數取得地址；```"Default-Route"```會填入預設閘道；```"Broadcast"```則會填入廣播號碼，另外如果是IP地址還可以使用主機名稱代替。
 * ```陣列類型(array)```：只能使用```[]```。
 * ```物件類型(object)```：只能使用```{}```。
 * ```其他類型(others)```：查看該欄位的說明。
@@ -81,7 +81,7 @@ Socket configuration and examples.
 * ```String```: ```"\uxxxx"``` is available which mean unicode, escape character is same as JSON.
 * ```Boolean```: ```"enable"```, ```"disable"```, ```0```, ```1```, 0 and 1 are available.
 * ```Binary```: 0 or 1 only, length is limited.
-* ```Address```: ```"Myself"``` means self address information according to ```"Device"```. ```"Broadcast"``` means broadcast address. If it is IP address, hostname is available.
+* ```Address```: ```"Myself"``` means self address information according to ```"Device"```. ```"Default-Route"``` will fill default gateway. ```"Broadcast"``` means broadcast address. If it is IP address, hostname is available.
 * ```Array```: ```[]``` only.
 * ```Object```: ```{}``` only.
 * ```Others```: Check the feild Explanation.
@@ -95,8 +95,8 @@ Socket configuration and examples.
 Format: ```"Field name"```(value types, optional/required/depends, default: value): description.
 
 ##Functions
-* ```"lookup_mac_address()"```：用來查詢對應的MAC地址，參數只能夠為一個IP地址，例如：```lookup_mac_address(192.168.1.1)```，找不到會先試著送出ARP Request封包一次後再重新嘗試取得，最後失敗會用```"0.0.0.0"```，另外```"224.0.0.0/8"```、```"239.0.0.0/8"```也能夠傳回對應的地址。
-* ```"lookup_ip_address()"```：用來查詢對應的IP地址，參數只能夠為一個MAC地址，例如：```lookup_ip_address(1:2:3:4:5:6)```，找不到則會用```"00:00:00:00:00:00"```。
+* ```"lookup_mac_address()"```：用來查詢對應的MAC地址，參數只能夠為一個IP地址，例如：```lookup_mac_address(192.168.1.1)```，找不到會先試著送出ARP Request封包一次後再重新嘗試取得；另外```"224.0.0.0/8"```、```"239.0.0.0/8"```也能夠傳回對應的地址。
+* ```"lookup_ip_address()"```：用來查詢對應的IP地址，參數只能夠為一個MAC地址，例如：```lookup_ip_address(1:2:3:4:5:6)```，找不到則會用```"0.0.0.0"```。
 * ```"random_ip_address()"```：隨機產生一個ip地址，不會產生0.0.0.0、廣播地址、群播地址、實驗用地址、私有地址、loopback地址以及0.0.0.0/8。
 * ```"random_mac_address()"```：隨機產生一個mac地址，不會產生群播地址和廣播地址。
 * ```"random()"```：取得亂數，無參數亂數範圍0-4294967295。參數可以為一個範圍，```random(1-100)```則會產生1-100區間的亂數。其他保留字有：```Well-known```和```Official```，可產生0-1023區間亂數；```Unofficial```和```Registered```可產生1024-49151區間亂數；```Multiple use```、```Dynamic```、```Private```和```Ephemeral```可產生49152-65535，```u_int8_t```可產生0-255，```u_int16_t```可產生0-65535，```u_int32_t```可產生0-4294967295（預設值）。
@@ -105,8 +105,8 @@ Format: ```"Field name"```(value types, optional/required/depends, default: valu
 
 </br>
 
-* ```"lookup_mac_address()"```: Lookup corresponding MAC address. Parameter is an IP address. Example: ```lookup_mac_address(192.168.1.1)```. If is not found, send an ARP request and retry again. If is not found again return ```"0.0.0.0"```. ```"224.0.0.0/8"``` and ```"239.0.0.0/8"``` is also can return corresponding mac address.
-* ```"lookup_ip_address()"```: Lookup corresponding IP address. Parameter is a MAC address. Example: ```lookup_ip_address(1:2:3:4:5:6)``` . If is not found. return "00:00:00:00:00:00"```.
+* ```"lookup_mac_address()"```: Lookup corresponding MAC address. Parameter is an IP address. Example: ```lookup_mac_address(192.168.1.1)```. If is not found, send an ARP request and retry again. ```"224.0.0.0/8"``` and ```"239.0.0.0/8"``` is also can return corresponding mac address.
+* ```"lookup_ip_address()"```: Lookup corresponding IP address. Parameter is a MAC address. Example: ```lookup_ip_address(1:2:3:4:5:6)``` . If is not found. return ```"0.0.0.0"```.
 * ```"random_ip_address()"```: Generating an IP address randomly. Not generate: 0.0.0.0, broadcast address, multicast address, experimental address, private address, loopback address and 0.0.0.0/8.
 * ```"random_mac_address()"```: Generating a MAC address randomly. Not generate: multicast address and broadcast address.
 * ```"random()"```: Generate a number. No parameter which mean random number range is 0-4294967295. Parameter can be a range, ```random(1-100)``` generate a number between 1-100. Reserved word: ```Well-known``` and ```Official``` which mean random number range is 0-1023. ```Unofficial``` and ```Registered``` is 1024-49151. ```Multiple use```, ```Dynamic```, ```Private``` and ```Ephemeral``` is 49152-65535. ```u_int8_t```is 0-255. ```u_int16_t``` is 0-65535. ```u_int32_t``` is 0-4294967295(Default).
@@ -175,8 +175,8 @@ Format: ```"Field name"```(value types, optional/required/depends, default: valu
 * ```"Infinite loop"```(boolean, optional, default: "disable")：是否需要無窮迴圈，如果被設定則```"Amount"```無效果。
 * ```"Interval"```(integer: 4 bytes, optional, default: 0)：每輪間隔，單位微秒(microsecond)，預設0表示無間隔。
 * ```"Type"```(string, required)：傳輸層類型，只能是```"SOCK_STREAM"```或```"SOCK_DGRAM"```，```"SOCK_STREAM"```通常使用TCP，```"SOCK_DGRAM"```通常使用UDP。
-* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0)：送出超時時間，預設表示會阻塞著直到送出封包，單位毫秒(millisecond)。
-* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0)：接收超時時間，預設表示會阻塞著直到接收封包，單位毫秒(millisecond)。
+* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0)：送出超時時間，預設表示會阻塞著直到送出封包，單位微秒(microsecond)。
+* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0)：接收超時時間，預設表示會阻塞著直到接收封包，單位微秒(microsecond)。
 * ```"Role"```(string, required)：只能是```"Server"```或```"Client"```。
 
 </br>
@@ -186,8 +186,8 @@ Format: ```"Field name"```(value types, optional/required/depends, default: valu
 * ```"Infinite loop"```(boolean, optional, default: "disable"): Infinite loop or not, if set, ```"Amount"``` is not effective.
 * ```"Interval"```(integer: 4 bytes, optional, default: 0): Inerval of each round. Microsecond, default 0 wich mean no interval.
 * ```"Type"```(string, required): Transport layer type, ```"SOCK_STREAM"``` or ```"SOCK_DGRAM"``` only. ```"SOCK_STREAM"``` usually is TCP, ```"SOCK_DGRAM"``` usually is UDP.
-* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0): Send timeout, default 0 which mean block until send. Millisecond.
-* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0): Receive timeout, default 0 which mean block until receive. Millisecond.
+* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0): Send timeout, default 0 which mean block until send. Microsecond.
+* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0): Receive timeout, default 0 which mean block until receive. Microsecond.
 * ```"Role"```(string, required):```"Server"``` or ```"Client"``` only.
 
 <!--
@@ -285,14 +285,14 @@ If ```"Client"``` and ```"Type"``` is ```"SOCK_STREAM"``` and ```"Security"``` i
 * ```"Amount"```(integer: 4 bytes, optional, default: 1)：送出數量。
 * ```"Infinite loop"```(boolean, optional, default: "disable")：是否需要無窮迴圈，如果被設定則```"Amount"```無效果。
 * ```"Interval"```(integer: 4 bytes, optional, default: 0)：每個封包間隔，單位微秒(microsecond)，預設0表示無間隔。
-* ```"Dump send packet"```(boolean, optional, default: "disable")：送出封包後，是否要將封包解析出來，目前可解析```"Ethernet"```、```"ARP"```、```"Wake-On-LAN"```(Layer 2, over Ethernet)、```"IPv4"```、```"TCP"```、```"UDP"```、```"ICMP"```以及```"Payload"```。
+* ```"Dump send packet"```(boolean, optional, default: "disable")：送出封包後，是否要將封包解析出來。
 
 </br>
 
 * ```"Amount"```(integer: 4 bytes, optional, default: 1): Send amount.
 * ```"Infinite loop"```(boolean, optional, default: "disable"): Infinite loop or not, if set, ```"Amount"``` is not effective.
 * ```"Interval"```(integer: 4 bytes, optional, default: 0): Inerval of each packet. Microsecond, default 0 wich mean no interval.
-* ```"Dump send packet"```(boolean, optional, default: "disable"): After sending, dump send packet or not. Current available: ```"Ethernet"```, ```"ARP"```, ```"Wake-On-LAN"```(Layer 2, over Ethernet), ```"IPv4"```, ```"TCP"```, ```"UDP"```, ```"ICMP"``` and ```"Payload"```.
+* ```"Dump send packet"```(boolean, optional, default: "disable"): After sending, dump send packet or not.
 
 
 ###Receive packet comment option
@@ -304,7 +304,7 @@ If ```"Client"``` and ```"Type"``` is ```"SOCK_STREAM"``` and ```"Security"``` i
 > Empty. Not support receive packet for now, except ```"Application"```.
 
 ####Application send packet(extract option)
-* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0)：送出超時時間，預設表示會阻塞著直到送出封包，單位毫秒(millisecond)。
+* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0)：送出超時時間，預設表示會阻塞著直到送出封包，單位微秒(microsecond)。
 * ```"Send Length"```(integer: 2 bytes, optional, default: 0)：送出封包大小，0表示自動計算。
 * ```"Interactive"```(boolean, optional, default: "disable")：封包內容(Message)是否手動輸入，該選項與```"Input from file"```互斥。
 * ```"Input from file"```(string, optional, default: NULL)：從檔案讀入封包內容(Message)送出，該選項與```"Interactive"```互斥。
@@ -313,7 +313,7 @@ If ```"Client"``` and ```"Type"``` is ```"SOCK_STREAM"``` and ```"Security"``` i
 
 </br>
 
-* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0): Send timeout, default 0 which mean block until send. Millisecond.
+* ```"Send Timeout"```(integer: 4 bytes, optional, default: 0): Send timeout, default 0 which mean block until send. Microsecond.
 * ```"Send Length"```(integer: 2 bytes, optional, default: 0): Length of send packet. 0 means auto calculate.
 * ```"Interactive"```(boolean, optional, default: "disable"): Packet message input manually. Mutual exclusion to ```"Input from file"```.
 
@@ -323,8 +323,8 @@ If ```"Client"``` and ```"Type"``` is ```"SOCK_STREAM"``` and ```"Security"``` i
 * ```"Amount"```(integer: 4 bytes, optional, default: 1)：送出數量。
 * ```"Infinite loop"```(boolean, optional, default: "disable")：是否需要無窮迴圈，如果被設定則```"Amount"```無效果。
 * ```"Interval"```(integer: 4 bytes, optional, default: 0)：每個封包間隔，單位微秒(microsecond)，預設0表示無間隔。
-* ```"Dump receive packet"```(boolean, optional, default: "disable")：收到封包後，是否要將封包解析出來，目前可解析```"Ethernet"```、```"ARP"```、```"Wake-On-LAN"```(Layer 2, over Ethernet)、```"IPv4"```、```"TCP"```、```"UDP"```、```"ICMP"```以及```"Payload"```。
-* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0)：接收超時時間，預設表示會阻塞著直到接收封包，單位毫秒(millisecond)。
+* ```"Dump receive packet"```(boolean, optional, default: "disable")：收到封包後，是否要將封包解析出來。
+* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0)：接收超時時間，預設表示會阻塞著直到接收封包，單位微秒(microsecond)。
 * ```"Read until Timeout"```(boolean, optional, default: "disable")：讀取封包，如果Timeout就結束讀取，會忽略```""Infinite loop"```的設定。
 * ```"Output to file"```(string, optional, default: NULL)：將接收到的封包內容(Message)輸出到檔案。
 
@@ -333,29 +333,29 @@ If ```"Client"``` and ```"Type"``` is ```"SOCK_STREAM"``` and ```"Security"``` i
 * ```"Amount"```(integer: 4 bytes, optional, default: 1): Send amount.
 * ```"Infinite loop"```(boolean, optional, default: "disable"): Infinite loop or not, if set, ```"Amount"``` is not effective.
 * ```"Interval"```(integer: 4 bytes, optional, default: 0): Inerval of each packet. Microsecond, default 0 wich mean no interval.
-* ```"Dump receive packet"```(boolean, optional, default: "disable"): After receiving, dump received packet or not. Current available: ```"Ethernet"```, ```"ARP"```, ```"Wake-On-LAN"```(Layer 2, over Ethernet), ```"IPv4"```, ```"TCP"```, ```"UDP"```, ```"ICMP"``` and ```"Payload"```.
-* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0): Receive timeout, default 0 which mean block until receive. Millisecond.
+* ```"Dump receive packet"```(boolean, optional, default: "disable"): After receiving, dump received packet or not.
+* ```"Receive Timeout"```(integer: 4 bytes, optional, default: 0): Receive timeout, default 0 which mean block until receive. Microsecond.
 * ```"Read until Timeout"```(boolean, optional, default: "disable"): Keep receiving packet until timeout. Ignore ```""Infinite loop"```.
 * ```"Output to file"```(string, optional, default: NULL): Output received message to file.
 
 ##Procotol headers
-* [```"Ethernet"```](Ethernet.md)
-* [```"ARP"```](ARP.md)
-* [```"RARP"```](ARP.md)
-* [```"Wake-On-LAN"```](WOL.md)
-* [```"IPv4"```](IPv4.md)
-* [```"IPv4 Options"```](IPv4.md)
-* [```"UDP"```](UDP.md)
-* [```"TCP"```](TCP.md)
-* [```"TCP Options"```](TCP.md)
-* [```"ICMPv4 Echo/Request"```](ICMPv4.md)
-* [```"ICMPv4 Time Exceeded"```](ICMPv4.md)
-* [```"ICMPv4 Destination Unreachable"```](ICMPv4.md)
-* [```"ICMPv4 Redirect"```](ICMPv4.md)
-* [```"RIPv1/RIPv2"```](RIP.md)
-* [```"SSDP"```](Message.md)
-* [```"HTTP"```](Message.md)
-* [```"DHCPv4"```](DHCPv4.md)
-* [```"DHCPv4 Options"```](DHCPv4.md)
+* [```"Ethernet"```](Socket/Ethernet.md)
+* [```"ARP"```](Socket/ARP.md)
+* [```"RARP"```](Socket/ARP.md)
+* [```"Wake-On-LAN"```](Socket/WOL.md)
+* [```"IPv4"```](Socket/IPv4.md)
+* [```"IPv4 Options"```](Socket/IPv4.md)
+* [```"UDP"```](Socket/UDP.md)
+* [```"TCP"```](Socket/TCP.md)
+* [```"TCP Options"```](Socket/TCP.md)
+* [```"ICMPv4 Echo/Request"```](Socket/ICMPv4.md)
+* [```"ICMPv4 Time Exceeded"```](Socket/ICMPv4.md)
+* [```"ICMPv4 Destination Unreachable"```](Socket/ICMPv4.md)
+* [```"ICMPv4 Redirect"```](Socket/ICMPv4.md)
+* [```"RIPv1/RIPv2"```](Socket/RIP.md)
+* [```"SSDP"```](Socket/Message.md)
+* [```"HTTP"```](Socket/Message.md)
+* [```"DHCPv4"```](Socket/DHCPv4.md)
+* [```"DHCPv4 Options"```](Socket/DHCPv4.md)
 * [```"SSL/TLS"```](Socket-Configuration.md)
-* [```"Other"```](Other.md)
+* [```"Other"```](Socket/Other.md)

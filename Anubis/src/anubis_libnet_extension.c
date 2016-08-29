@@ -2,7 +2,7 @@
 //  anubis_libnet_extension.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/4/6.
+//  Created by TUTU on 2016/4/6.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -152,6 +152,7 @@ anubis_build_universal(const char *func, const uint8_t *data, uint32_t data_leng
                             l, ptag);
     if(tag == -1) {
         char *err = libnet_geterror(l);
+        //error message
         if(!strncasecmp(err, "libnet_build_data(): ", strlen("libnet_build_data(): "))) {
             err += strlen("libnet_build_data(): ");
         }

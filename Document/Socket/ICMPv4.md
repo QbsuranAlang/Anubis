@@ -53,7 +53,7 @@ ICMPv4 header.
         "Type": "ICMP_REDIRECT",
         "Code": "ICMP_REDIRECT_HOST",
         "Checksum": "auto",
-        "Gateway": "myself"
+        "Gateway": "Default-Route"
     }
 }
 ```

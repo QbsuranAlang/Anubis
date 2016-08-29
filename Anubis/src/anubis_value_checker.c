@@ -2,7 +2,7 @@
 //  anubis_value_checker.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/4/10.
+//  Created by TUTU on 2016/4/10.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -42,10 +42,14 @@ int anubis_is_mac_address(char *mac_address) {
     
     //length is not 6
     if(len != ETHER_ADDR_LEN) {
+#ifndef __CYGWIN__
         free(temp);
+#endif
         return 0;
     }//end if
     
+#ifndef __CYGWIN__
     free(temp);
+#endif
     return 1;
 }//end anubis_is_mac_address

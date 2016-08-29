@@ -1,0 +1,19 @@
+{
+    "Option": {
+        "Model": "arping",
+        "_comment": "arping to 192.168.1.1",
+        "Save configuration to file": "./arping_auto.json",
+        "Device": "en0",
+        "Amount": 4,
+        "Interval": 1000000, /*10^-6, 1000000 microsecond, 1s*/
+        "Infinite loop": "disable",
+        "Dump send packet": "disable",
+        "Receive Timeout": 1000, /*10^-3, 1000 millisecond, 1s*/
+        "Dump receive packet": "disable",
+        "Filter": "arp host 192.168.1.1 and arp[6:2] == 0x0002" /*It is default value*/
+    },
+
+    "Model": {
+        "Target": "192.168.1.1"
+    }
+}

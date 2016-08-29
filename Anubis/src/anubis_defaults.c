@@ -2,7 +2,7 @@
 //  anubis_defaults.c
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/3/31.
+//  Created by TUTU on 2016/3/31.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -27,14 +27,19 @@ char *anubis_default_device(void) {
     
     pcap_if_t *d = NULL;
     char errbuf[PCAP_ERRBUF_SIZE] = { 0 };
-    static char device[ANUBIS_BUFFER_SIZE] = { 0 };
+    static char device[ANUBIS_BUFFER_SIZE][ANUBIS_BUFFER_SIZE] = { 0 };
+    static int which = -1;
+    
+    which = (which + 1 == ANUBIS_BUFFER_SIZE ? 0 : which + 1);
+    
+    memset(device[which], 0, sizeof(device[which]));
     
     if (pcap_findalldevs(&d, errbuf) != 0) {
         anubis_err("%s\n", errbuf);
         return NULL;
     }//end if
     
-    memset(device, 0, sizeof(device));
+    memset(device[which], 0, sizeof(device[which]));
     for (pcap_if_t *tmp = d; tmp; tmp = tmp->next) {
         if (
 #ifdef PCAP_IF_UP
@@ -43,13 +48,13 @@ char *anubis_default_device(void) {
             !(tmp->flags & PCAP_IF_LOOPBACK)) {
             for (struct pcap_addr *a = tmp->addresses; a; a = a->next) {
                 if (a->addr && a->addr->sa_family == AF_INET) {
-                    strlcpy(device, tmp->name, sizeof(device));
+                    strlcpy(device[which], tmp->name, sizeof(device[which]));
                     break;
                 }//end if
             }//end for
         }//end if
         
-        if (strlen(device) > 0)
+        if (strlen(device[which]) > 0)
             break;
         
     }//end for
@@ -58,11 +63,11 @@ char *anubis_default_device(void) {
 	
 	char *tmp = NULL;
 #ifndef __CYGWIN__
-	tmp = device;
-    anubis_verbose("Select default device: \"%s\"\n", device);
+	tmp = device[which];
+    anubis_verbose("Select default device: \"%s\"\n", device[which]);
 #else
-	if (!(tmp = strstr(device, "{")))
-		tmp = device;
+	if (!(tmp = strstr(device[which], "{")))
+		tmp = device[which];
 	anubis_verbose("Select default device: \"%s\"\n", tmp);
 #endif
     return tmp;
@@ -85,15 +90,81 @@ u_int8_t *anubis_default_mac_address(const char *device) {
         return NULL;
     }//end if
     
-    struct libnet_ether_addr *src_mac = libnet_get_hwaddr(handle); //it is static
-    if(src_mac)
-        address = (u_int8_t *)src_mac;
+    struct libnet_ether_addr *my_mac = libnet_get_hwaddr(handle); //it is static
+    if(my_mac)
+        address = (u_int8_t *)my_mac;
     else
         anubis_err("%s\n", libnet_geterror(handle));
     
     libnet_destroy(handle);
     return address;
 }//end anubis_default_mac_address
+
+in_addr_t anubis_default_ip_address(const char *device) {
+    char errbuf[LIBNET_ERRBUF_SIZE];
+    libnet_t *handle = NULL;
+#ifdef __CYGWIN__
+    char device2[ANUBIS_BUFFER_SIZE] = {0};
+    snprintf(device2, sizeof(device2), "\\Device\\NPF_%s", device);
+    handle = anubis_libnet_init(LIBNET_RAW4, device2, errbuf);
+#else
+    handle = anubis_libnet_init(LIBNET_RAW4, device, errbuf);
+#endif
+    
+    if(!handle) {
+        anubis_err("%s\n", errbuf);
+        return 0;
+    }//end if
+    
+    in_addr_t my_ip = libnet_get_ipaddr4(handle);
+    if(my_ip == -1) {
+        anubis_err("%s\n", libnet_geterror(handle));
+        my_ip = 0;
+    }//end if
+    
+    libnet_destroy(handle);
+    return my_ip;
+}//end anubis_default_ip_address
+
+static int route_default_route_callback(const struct route_entry *entry, void *arg) {
+    struct route_entry *route = (struct route_entry *)arg;
+    struct sockaddr_in sock = {0};
+    
+    addr_ntos(&entry->route_dst, (struct sockaddr *)&sock);
+    
+    if(sock.sin_addr.s_addr == 0) {
+        memmove(&route->route_gw, &entry->route_gw, sizeof(route->route_gw));
+        return 1;
+    }//end if
+    
+    return 0;
+}//end route_default_route_callback
+
+in_addr_t anubis_default_route(void) {
+    route_t *handle = route_open();
+    struct route_entry route_entry = {0};
+    in_addr_t addr = 0;
+    
+    if(!handle) {
+        anubis_perror("route_open()");
+        return addr;
+    }//end if
+    
+    int ret = route_loop(handle, route_default_route_callback, (void *)&route_entry);
+    
+    if(ret == 1) {
+        struct sockaddr_in sa = {0};
+        addr_ntos(&route_entry.route_gw, (struct sockaddr *)&sa);
+        addr = sa.sin_addr.s_addr;
+        anubis_verbose("Default route: %s\n", anubis_ip_ntoa(addr));
+    }//end if
+    else {
+        anubis_err("anubis_default_route(): Default gateway is not found\n");
+    }//end else
+    
+    route_close(handle);
+    return addr;
+}//end anubis_default_route
 
 struct libnet_ethernet_hdr anubis_default_ethernet_header(const char *device) {
     struct libnet_ethernet_hdr ethernet_hdr = {0};

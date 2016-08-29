@@ -2,7 +2,7 @@
 //  anubis_defaults.h
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/3/31.
+//  Created by TUTU on 2016/3/31.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -37,8 +37,11 @@ anubis_packet_raw_data_t anubis_default_rip_header(void);
 anubis_message_hdr anubis_default_ssdp_header(void);
 anubis_message_hdr anubis_default_http_header(void);
 struct libnet_dhcpv4_hdr anubis_default_dhcp_header(const char *device);
+anubis_options_t anubis_default_dhcp_options(void);
+
 char *anubis_default_device(void);
 u_int8_t *anubis_default_mac_address(const char *device);
-anubis_options_t anubis_default_dhcp_options(void);
+in_addr_t anubis_default_ip_address(const char *device);
+in_addr_t anubis_default_route(void);
 
 #endif /* anubis_defaults_h */

@@ -2,7 +2,7 @@
 //  anubis_value_converter.h
 //  Anubis
 //
-//  Created by 聲華 陳 on 2016/3/31.
+//  Created by TUTU on 2016/3/31.
 //  Copyright © 2016年 TUTU. All rights reserved.
 //
 //
@@ -43,30 +43,30 @@ const SSL_METHOD *anubis_string_to_SSL_METOHD(const char *method, int role);
 
 #define IS_RANDOM(x) \
     F(x, "random")
-u_int32_t anubis_random(char *expression);
+u_int32_t anubis_random(const char *expression);
 
 #define IS_RANDOM_IP_ADDRESS(x) \
     F(x, "random_ip_address")
-in_addr_t anubis_random_ip_address(char *expression);
+in_addr_t anubis_random_ip_address(const char *expression);
 
 #define IS_RANDOM_MAC_ADDRESS(x) \
     F(x, "random_mac_address")
-u_int8_t *anubis_random_mac_address(char *expression);
+u_int8_t *anubis_random_mac_address(const char *expression);
 
 #define IS_LOOKUP_MAC_ADDRESS(x) \
     F(x, "lookup_mac_address")
-u_int8_t *anubis_lookup_mac_address(char *expression, const char *device);
+u_int8_t *anubis_lookup_mac_address(const char *expression, const char *device);
 
 #define IS_LOOKUP_IP_ADDRESS(x) \
     F(x, "lookup_ip_address")
-in_addr_t anubis_lookup_ip_address(char *expression);
+in_addr_t anubis_lookup_ip_address(const char *expression);
 
 #define IS_MULTICAST_ADDRESS(x) \
     F(x, "multicast_address")
-in_addr_t anubis_multicast_address(char *expression);
+in_addr_t anubis_multicast_address(const char *expression);
 
 #define IS_PORT(x) \
     F(x, "port")
-u_int16_t anubis_port(char *expression);
+u_int16_t anubis_port(const char *expression);
 
 #endif /* anubis_value_converter_h */
